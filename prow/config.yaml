@@ -1,0 +1,152 @@
+prowjob_namespace: prow
+pod_namespace: test-pods
+log_level: debug
+
+in_repo_config:
+  enabled:
+    "*": true
+
+plank: # replace 3 domain names
+  job_url_prefix_config:
+    "*": http://prow.danrong.io/view/
+  report_templates:
+    '*': >-
+      [Full PR test history](http://prow.danrong.io/pr-history?org={{.Spec.Refs.Org}}&repo={{.Spec.Refs.Repo}}&pr={{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}).
+      [Your PR dashboard](http://prow.danrong.io/pr?query=is:pr+state:open+author:{{with
+      index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).
+  pod_pending_timeout: 15m
+  default_decoration_configs:
+    "*":
+      timeout: 60m
+      grace_period: 15s
+      utility_images:
+        clonerefs: gcr.io/k8s-prow/clonerefs:v20211111-bce61c7c4a
+        entrypoint: gcr.io/k8s-prow/entrypoint:v20211111-bce61c7c4a
+        initupload: gcr.io/k8s-prow/initupload:v20211111-bce61c7c4a
+        sidecar: gcr.io/k8s-prow/sidecar:v20211111-bce61c7c4a
+      gcs_configuration:
+        bucket: s3://aws-gcr-prow-logs # replace by your own bucket name
+        path_strategy: explicit
+      s3_credentials_secret: s3-credentials
+      oauth_token_secret:
+        name: oauth-token
+        key: oauth
+      resources:
+        clonerefs:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+        initupload:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+        place_entrypoint:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+        sidecar:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+
+sinker:
+  resync_period: 1m
+  max_prowjob_age: 360h
+  max_pod_age: 24h
+  terminated_pod_ttl: 30m
+deck:
+  spyglass:
+    size_limit: 500000000 # 500MB
+    lenses:
+      - lens:
+          name: metadata
+        required_files:
+          - started.json|finished.json
+      - lens:
+          config:
+          name: buildlog
+        required_files:
+          - build-log.txt
+      - lens:
+          name: junit
+        required_files:
+          - .*/junit.*\.xml
+      - lens:
+          name: podinfo
+        required_files:
+          - podinfo.json
+  tide_update_period: 1s
+  view_auth_configs:
+    "*":
+      allow_anyone: true
+  rerun_auth_configs:
+    "*":
+      github_users:
+        - TerrificMao
+
+github:
+  link_url: https://github.com/
+github_reporter:
+  job_types_to_report:
+    - presubmit
+    - postsubmit
+
+tide:
+  sync_period: 15s
+  queries:
+    - orgs:
+        - awsgcr
+      repos:
+        - awsgcr/aws-infra
+      labels:
+        - lgtm
+        - approved
+      missingLabels:
+        - do-not-merge
+        - do-not-merge/hold
+        - do-not-merge/invalid-owners-file
+        - do-not-merge/work-in-progress
+        - needs-rebase
+        - do-not-merge/invalid-commit-message
+        - do-not-merge/kube-deploy-invalid
+        - do-not-merge/files-too-large
+  merge_method:
+    awsgcr: squash
+    awsgcr/aws-infra: squash
+  target_url: https://prow.danrong.io/tide
+  pr_status_base_urls:
+    "*": https://prow.danrong.io/pr
+  blocker_label: tide/merge-blocker
+  squash_label: tide/merge-method-squash
+  rebase_label: tide/merge-method-rebase
+  merge_label: tide/merge-method-merge
+
+presets:
+  - labels:
+      preset-aws-prod-infra-conf: "true"
+    volumes:
+      - name: aws-config
+        configMap:
+          name: aws-gcr-infra-config
+          items:
+            - key: aws-gcr-infra-config
+              path: aws-gcr-infra-config
+    volumeMounts:
+      - name: aws-config
+        mountPath: /root/.aws/config
+        subPath: aws-gcr-infra-config
+        readOnly: true
+
+decorate_all_jobs: true
