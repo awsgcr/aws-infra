@@ -1,8 +1,10 @@
 # AWS Infra Repo
 
+- It's a public repo that fored from https://github.com/kubernetes/test-infra/tree/master/prow
+
 ## GitOps Management
 
-### GitOps Usage - Git 如何使用快捷方式
+### GitOps Usage
 
 ##### How to update devops config with git fork operation
 
