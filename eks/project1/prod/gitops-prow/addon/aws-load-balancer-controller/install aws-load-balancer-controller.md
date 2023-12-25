@@ -71,9 +71,9 @@
     `}`
 `}`
 
-`a`ws iam attach-role-policy \`
+`aws iam attach-role-policy \`
   `--policy-arn arn:aws:iam::<aws_account_id>:policy/AWSLoadBalancerControllerIAMPolicy \`
-  --role-name AmazonEKSLoadBalancerControllerRole`
+ ` --role-name AmazonEKSLoadBalancerControllerRole`
 
 `cat >aws-load-balancer-controller-service-account.yaml <<EOF`
 `apiVersion: v1`
@@ -89,19 +89,24 @@
 `EOF`
 
 `kubectl apply -f aws-load-balancer-controller-service-account.yaml`
+
 serviceaccount/aws-load-balancer-controller created
 
 **install helm**
 
 https://docs.aws.amazon.com/eks/latest/userguide/helm.html
 `curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh`
-  `% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current`
+
+`% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current`
                                  `Dload  Upload   Total   Spent    Left  Speed`
 `100 11664  100 11664    0     0  41210      0 --:--:-- --:--:-- --:--:-- 41361`
+
 `ll`
 `total 12`
 `-rw-r--r--. 1 root root 11664 Dec 25 08:38 get_helm.sh`
+
 `chmod 700 get_helm.sh`
+
 `./get_helm.sh`
 `Downloading https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz`
 `Verifying checksum... Done.`
@@ -116,8 +121,11 @@ https://docs.aws.amazon.com/eks/latest/userguide/helm.html
 **install aws ingress controller**
 
 `helm repo add eks https://aws.github.io/eks-charts`
+
 "eks" has been added to your repositories
+
 `helm repo update eks`
+
 Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "eks" chart repository
 Update Complete. ⎈Happy Helming!⎈
@@ -126,7 +134,8 @@ Update Complete. ⎈Happy Helming!⎈
   `-n kube-system \`
   `--set clusterName=gitops-prow \`
   `--set serviceAccount.create=false \`
-  --set serviceAccount.name=aws-load-balancer-controller` 
+  `--set serviceAccount.name=aws-load-balancer-controller` 
+
 NAME: aws-load-balancer-controller
 LAST DEPLOYED: Mon Dec 25 08:44:40 2023
 NAMESPACE: kube-system
@@ -139,5 +148,6 @@ AWS Load Balancer controller installed!
 **Verify that the controller is installed.**
 
 `kubectl get deployment -n kube-system aws-load-balancer-controller`
+
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
 aws-load-balancer-controller   2/2     2            2           27s
