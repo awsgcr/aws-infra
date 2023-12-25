@@ -3,20 +3,22 @@
 `cd /root/aws-infra/eks/mainsite/prod/gitops-prow/addon/aws-load-balancer-controller`
 
 **创建AWSLoadBalancerControllerIAMPolicy**
+
 `curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json`
 
-`a`ws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json`
+`aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json`
 `eksctl create iamserviceaccount \`
   `--cluster=gitops-prow \`
   `--namespace=kube-system \`
   `--name=aws-load-balancer-controller \`
   `--role-name AmazonEKSLoadBalancerControllerRole \`
   `--attach-policy-arn=arn:aws:iam::<aws_account_id>:policy/AWSLoadBalancerControllerIAMPolicy \`
-  --approve`
+  `--approve`
 
 `oidc_id=$(aws eks describe-cluster --name gitops-prow --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)`
 
 `aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4`
+
 3B25B8991969DEE1082497E0792338E9"
 
 `cat >load-balancer-role-trust-policy.json <<EOF`
@@ -89,7 +91,9 @@
 `kubectl apply -f aws-load-balancer-controller-service-account.yaml`
 serviceaccount/aws-load-balancer-controller created
 
-**install helm** https://docs.aws.amazon.com/eks/latest/userguide/helm.html
+**install helm**
+
+https://docs.aws.amazon.com/eks/latest/userguide/helm.html
 `curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh`
   `% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current`
                                  `Dload  Upload   Total   Spent    Left  Speed`
@@ -110,6 +114,7 @@ serviceaccount/aws-load-balancer-controller created
 `version.BuildInfo{Version:"v3.13.1", GitCommit:"3547a4b5bf5edb5478ce352e18858d8a552a4110", GitTreeState:"clean", GoVersion:"go1.20.8"}`
 
 **install aws ingress controller**
+
 `helm repo add eks https://aws.github.io/eks-charts`
 "eks" has been added to your repositories
 `helm repo update eks`
@@ -117,7 +122,7 @@ Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "eks" chart repository
 Update Complete. ⎈Happy Helming!⎈
 
-`h`elm install aws-load-balancer-controller eks/aws-load-balancer-controller \`
+`helm install aws-load-balancer-controller eks/aws-load-balancer-controller \`
   `-n kube-system \`
   `--set clusterName=gitops-prow \`
   `--set serviceAccount.create=false \`
@@ -132,6 +137,7 @@ NOTES:
 AWS Load Balancer controller installed!
 
 **Verify that the controller is installed.**
+
 `kubectl get deployment -n kube-system aws-load-balancer-controller`
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
 aws-load-balancer-controller   2/2     2            2           27s
