@@ -56,11 +56,18 @@ $ 把starter.yaml中 prow.gitcpu.io 替换成你自己的本机域名，或是�
 $ Optionally, you can update the cert-manager.io/cluster-issuer: annotation if you use cert-manager
 ```
 
-#### prepare ProwJob CRD
+#### install ProwJob CRD
 
 ```
-cp ~/app/test-infra/config/prow/cluster/prowjob_customresourcedefinition.yaml ./
-kubectl apply --server-side=true -f prowjob_customresourcedefinition.yaml
+$ cd /root/aws-infra/prow
+$ kubectl apply --server-side=true -f prowjob_customresourcedefinition.yaml
+The CustomResourceDefinition "prowjobs.prow.k8s.io" is invalid:
+* spec.validation.openAPIV3Schema.properties[spec].type: Required value: must not be empty for specified object fields
+* spec.validation.openAPIV3Schema.properties[status].anyOf[0].not.properties[state].type: Forbidden: must be empty to be structural
+* spec.validation.openAPIV3Schema.properties[status].type: Required value: must not be empty for specified object fields
+* spec.validation.openAPIV3Schema.type: Required value: must not be empty at the root
+* metadata.annotations[api-approved.kubernetes.io]: Required value: protected groups must have approval annotation "api-approved.kubernetes.io", see https://github.com/kubernetes/enhancements/pull/1111
+* spec.preserveUnknownFields: Invalid value: true: cannot set to true, set x-kubernetes-preserve-unknown-fields to true in spec.versions[*].schema instead
 ```
 
 #### install Prow
