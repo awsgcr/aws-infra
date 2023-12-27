@@ -1,11 +1,6 @@
 # This file contains Kubernetes YAML files for the most important prow
 # components. Don't edit resources in this file. Instead, pull them out into
 # their own files.
---- # 部署在prow namespace
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: prow
 --- # hook 组件
 apiVersion: apps/v1
 kind: Deployment
