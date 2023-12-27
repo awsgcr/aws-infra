@@ -102,8 +102,6 @@ tide:
   queries:
     - orgs:
         - awsgcr
-      repos:
-        - awsgcr/aws-infra
       labels:
         - lgtm
         - approved
