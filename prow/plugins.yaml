@@ -29,37 +29,21 @@ config_updater:
       name: config
     prow/plugins.yaml:
       name: plugins
-    prow/config/label-config/*: # 加载labels文件，不同项目进行不同配色
+    prow/config/label-config/*: # 加载 /prow/config/label-config/labels.yaml 文件, 不同项目进行不同配色
       name: label-config
+      key: config
       clusters:
         default:
           - test-pods
-
-    prow/scripts/*:
-      name: prow-ci-scripts
+    prow/config/aws-config/*: # 加载 /prow/config/aws-config/aws-deploy-config 文件, AWS资源部署
+      name: aws-deploy-config
+      key: config
       clusters:
         default:
           - test-pods
-    prow/config/policy:
-      name: ecr-pull-policy
-      clusters:
-        default:
-          - test-pods
-    prow/config/config.json:
-      name: docker-config
-      clusters:
-        default:
-          - test-pods
-    app/template/dockerfile/*:
-      name: dockerfile-template
-      clusters:
-        default:
-          - test-pods
-    prow/jobs/**/*.yaml:
-      name: aws-infra-job-config
-      gzip: true
-    prow/config/kube-deploy.yaml:
-      name: aws-infra-kube-deploy-config
+    prow/config/kube-deploy.yaml: # 加载 /prow/config/kube-deploy.yaml 文件, K8S资源部署
+      name: kube-deploy-config
+      key: config
       clusters:
         default:
           - kube-deploy
