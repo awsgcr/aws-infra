@@ -4,7 +4,7 @@
 
 triggers:
   - repos:
-      - awsgcr/aws-infra # replace by your own org/repo_name
+      - awsgcr # replace by your own org/repo_name
     ignore_ok_to_test: false
     elide_skipped_contexts: false
 
@@ -20,7 +20,7 @@ approve:
     lgtm_acts_as_approve: true
 
 file_size_limit:
-  awsgcr/aws-infra:
+  awsgcr:
     additional_ignore_file_exts: []
 
 config_updater:
