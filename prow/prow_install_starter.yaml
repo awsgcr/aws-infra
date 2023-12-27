@@ -53,7 +53,7 @@ spec:
           ports:
             - name: http
               containerPort: 8888
-          - name: metrics
+            - name: metrics
               containerPort: 9090
           volumeMounts:
             - name: hmac
