@@ -29,7 +29,7 @@ $ kubectl create ns prow
 namespace/prow created
 ```
 
-#### generate hmac-token secret
+#### 创建 `hmac-token` 用于 Github webhooks 的认证
 
 ```
 $ 基于 openssl rand 方法自动生成，生成一个用于 Github Webhook 认证的 hmac 令牌。
