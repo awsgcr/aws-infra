@@ -118,7 +118,6 @@ tide:
         - do-not-merge/files-too-large
   merge_method:
     awsgcr: squash
-    awsgcr/aws-infra: squash
   target_url: https://prow.danrong.io/tide
   pr_status_base_urls:
     "*": https://prow.danrong.io/pr
