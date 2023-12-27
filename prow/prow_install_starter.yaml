@@ -484,9 +484,9 @@ spec:
             - name: config
               mountPath: /etc/config
               readOnly: true
-            - name: jobConfig
-              mountPath: /etc/job-config
-              readOnly: true
+            # - name: jobConfig
+            #   mountPath: /etc/job-config
+            #   readOnly: true
             - name: plugins
               mountPath: /etc/plugins
               readOnly: true
@@ -500,9 +500,9 @@ spec:
         - name: config
           configMap:
             name: config
-        - name: jobConfig
-          configMap:
-            name: jobConfig
+        # - name: jobConfig
+        #   configMap:
+        #     name: jobConfig
         - name: plugins
           configMap:
             name: plugins
@@ -950,9 +950,9 @@ spec:
             - name: config
               mountPath: /etc/config
               readOnly: true
-            - name: jobConfig
-              mountPath: /etc/job-config
-              readOnly: true
+            # - name: jobConfig
+            #   mountPath: /etc/job-config
+            #   readOnly: true
       volumes:
         - name: oauth-token
           secret:
@@ -960,9 +960,9 @@ spec:
         - name: config
           configMap:
             name: config
-        - name: jobConfig
-          configMap:
-            name: jobConfig
+        # - name: jobConfig
+        #   configMap:
+        #     name: jobConfig
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1109,9 +1109,9 @@ spec:
             - name: config
               mountPath: /etc/config
               readOnly: true
-            - name: jobConfig
-              mountPath: /etc/job-config
-              readOnly: true
+            # - name: jobConfig
+            #   mountPath: /etc/job-config
+            #   readOnly: true
             - name: oauth
               mountPath: /etc/github
               readOnly: true
@@ -1122,9 +1122,9 @@ spec:
         - name: config
           configMap:
             name: config
-        - name: jobConfig
-          configMap:
-            name: jobConfig
+        # - name: jobConfig
+        #   configMap:
+        #     name: jobConfig
         - name: oauth-token
           secret:
             secretName: oauth-token
