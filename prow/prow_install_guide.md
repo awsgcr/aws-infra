@@ -41,10 +41,18 @@ $ kubectl -n prow create secret generic hmac-token --from-file=hmac=/root/prow_s
 secret/hmac-token created
 ```
 
-#### prepare start.yaml, config.yaml, plugins.yaml
+#### 部署 ProwJob CRD
 
 ```
-$ 把config.yaml的三处域名，一个组织/仓库替换成你自己的
+$ cd /root/aws-infra/prow
+$ kubectl apply --server-side=true -f prowjob_customresourcedefinition.yaml
+customresourcedefinition.apiextensions.k8s.io/prowjobs.prow.k8s.io serverside-applied
+```
+
+#### 自定义 prow_install_starter.yaml, config.yaml, plugins.yaml
+
+```
+$ 替换config.yaml中三处域名，和 org/repo 成为你自己的
 $ kubectl -n prow delete cm config
 $ kubectl -n prow create cm config --from-file=config.yaml
 
@@ -52,16 +60,8 @@ $ 把plugins.yaml中的组织/仓库替换成你自己的
 $ kubectl -n prow delete cm plugins
 $ kubectl -n prow create cm plugins --from-file=plugins.yaml
 
-$ 把starter.yaml中 prow.gitcpu.io 替换成你自己的本机域名，或是公有云域名
-$ Optionally, you can update the cert-manager.io/cluster-issuer: annotation if you use cert-manager
-```
-
-#### install ProwJob CRD
-
-```
-$ cd /root/aws-infra/prow
-$ kubectl apply --server-side=true -f prowjob_customresourcedefinition.yaml
-customresourcedefinition.apiextensions.k8s.io/prowjobs.prow.k8s.io serverside-applied
+$ 部署 prow_install_starter.yaml
+$ kubectl apply -f prow_install_starter.yaml
 ```
 
 #### install Prow
