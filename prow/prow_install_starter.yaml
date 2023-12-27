@@ -954,7 +954,7 @@ spec:
             #   mountPath: /etc/job-config
             #   readOnly: true
       volumes:
-        - name: oauth-token
+        - name: oauth
           secret:
             secretName: oauth-token
         - name: config
@@ -1125,7 +1125,7 @@ spec:
         # - name: jobConfig
         #   configMap:
         #     name: jobConfig
-        - name: oauth-token
+        - name: oauth
           secret:
             secretName: oauth-token
         - name: s3-credentials
