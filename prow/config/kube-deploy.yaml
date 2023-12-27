@@ -1,0 +1,7 @@
+# this is kube-deploy config
+kube-deploy:
+  postsubmits:
+    awsgcr/aws-infra:
+      - files: eks/project1/prod/gitops-prow/k8s/.*(?<!/encrypted-secret)\.ya?ml
+        clusters:
+          - name: gitops-prow
