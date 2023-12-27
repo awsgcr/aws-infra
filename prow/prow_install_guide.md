@@ -76,10 +76,13 @@ secret/oauth-token created
 #### 至此，生产4个Secret如下
 
 ```
-
+kubectl get secret -n prow
+NAME                  TYPE     DATA   AGE
+cookie                Opaque   1      30s
+github-oauth-config   Opaque   1      21s
+hmac-token            Opaque   1      41s
+oauth-token           Opaque   1      13s
 ```
-
-
 
 #### 部署 ProwJob CRD
 
@@ -87,6 +90,16 @@ secret/oauth-token created
 $ cd /root/aws-infra/prow
 $ kubectl apply --server-side=true -f prowjob_customresourcedefinition.yaml
 customresourcedefinition.apiextensions.k8s.io/prowjobs.prow.k8s.io serverside-applied
+
+kubectl get crd --all-namespaces
+NAME                                         CREATED AT
+cninodes.vpcresources.k8s.aws                2023-12-23T15:30:00Z
+eniconfigs.crd.k8s.amazonaws.com             2023-12-23T15:29:57Z
+ingressclassparams.elbv2.k8s.aws             2023-12-25T08:44:40Z
+policyendpoints.networking.k8s.aws           2023-12-23T15:30:01Z
+prowjobs.prow.k8s.io                         2023-12-27T09:44:59Z
+securitygrouppolicies.vpcresources.k8s.aws   2023-12-23T15:30:00Z
+targetgroupbindings.elbv2.k8s.aws            2023-12-25T08:44:40Z
 ```
 
 #### 自定义 prow_install_starter.yaml, config.yaml, plugins.yaml

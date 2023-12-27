@@ -59,7 +59,7 @@ spec:
             - name: hmac
               mountPath: /etc/webhook
               readOnly: true
-            - name: github-token
+            - name: oauth
               mountPath: /etc/github
               readOnly: true
             - name: config
@@ -227,7 +227,7 @@ spec:
             - name: cookie-secret #from cookie
               mountPath: /etc/cookie
               readOnly: true
-            - name: oauth-token
+            - name: oauth
               mountPath: /etc/github
               readOnly: true
             - name: config
@@ -259,7 +259,7 @@ spec:
         - name: oauth-config
           secret:
             secretName: github-oauth-config
-        - name: oauth-token
+        - name: oauth
           secret:
             secretName: oauth-token
         - name: cookie-secret
