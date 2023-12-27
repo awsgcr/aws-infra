@@ -66,6 +66,7 @@ sinker:
   max_prowjob_age: 360h
   max_pod_age: 24h
   terminated_pod_ttl: 30m
+
 deck:
   spyglass:
     size_limit: 500000000 # 500MB
@@ -95,13 +96,6 @@ deck:
     "*":
       github_users:
         - TerrificMao
-
-github:
-  link_url: https://github.com/
-github_reporter:
-  job_types_to_report:
-    - presubmit
-    - postsubmit
 
 tide:
   sync_period: 15s
@@ -135,18 +129,19 @@ tide:
 
 presets:
   - labels:
-      preset-aws-prod-infra-conf: "true"
+      preset-deploy-prod: "true"
     volumes:
-      - name: aws-config
+      - name: prod-kube-config
         configMap:
-          name: aws-gcr-infra-config
-          items:
-            - key: aws-gcr-infra-config
-              path: aws-gcr-infra-config
+          name: prod-kube-config
+      - name: prod-aws-config
+        configMap:
+          name: prod-aws-config
     volumeMounts:
-      - name: aws-config
-        mountPath: /root/.aws/config
-        subPath: aws-gcr-infra-config
+      - name: prod-kube-config
+        mountPath: /root/.kube/
         readOnly: true
-
-decorate_all_jobs: true
+      - name: prod-aws-config
+        mountPath: /root/.aws/config
+        subPath: config
+        readOnly: true

@@ -29,13 +29,14 @@ config_updater:
       name: config
     prow/plugins.yaml:
       name: plugins
-    prow/scripts/*:
-      name: prow-ci-scripts
+    prow/config/label-config/*: # 加载labels文件，不同项目进行不同配色
+      name: label-config
       clusters:
         default:
           - test-pods
-    prow/config/label-config/*:
-      name: label-config
+
+    prow/scripts/*:
+      name: prow-ci-scripts
       clusters:
         default:
           - test-pods
