@@ -189,7 +189,7 @@ spec:
             - --tide-url=http://tide/
             - --hook-url=http://hook:8888/plugin-help
             - --config-path=/etc/config/config.yaml
-            - --job-config=/etc/job-config
+            # - --job-config=/etc/job-config
             - --plugin-config=/etc/plugins/plugins.yaml
             - --spyglass=true
             - --rerun-creates-job
