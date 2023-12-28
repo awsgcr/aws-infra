@@ -1,4 +1,0 @@
-spec:
-  containers:
-  - args:
-    - --ingress-class=alb
