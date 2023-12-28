@@ -228,12 +228,54 @@ deck-68c6ff47d6-qr8hq                      1/1     Running            0         
 ghproxy-5bbbd5f5f-6f72l                    1/1     Running            0                11h
 ```
 
-#### check all pod status
+#### 安装 nginx-ingress
 
 ```
-kubectl get pods -n prow
+$ kubectl apply -f ingress-nginx.yaml
+serviceaccount/ingress-nginx created
+configmap/ingress-nginx-controller created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+service/ingress-nginx-controller-admission created
+service/ingress-nginx-controller created
+deployment.apps/ingress-nginx-controller created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+serviceaccount/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+
+确认部署状态
+$ kubectl -n ingress-nginx get all
+NAME                                            READY   STATUS      RESTARTS   AGE
+pod/ingress-nginx-admission-create-5cg6x        0/1     Completed   0          40s
+pod/ingress-nginx-admission-patch-sgqcm         0/1     Completed   1          40s
+pod/ingress-nginx-controller-7c744c9d7f-6dz4k   1/1     Running     0          40s
+
+NAME                                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+service/ingress-nginx-controller             NodePort    172.20.197.28   <none>        80:31676/TCP,443:30579/TCP   40s
+service/ingress-nginx-controller-admission   ClusterIP   172.20.73.244   <none>        443/TCP                      40s
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ingress-nginx-controller   1/1     1            1           40s
+
+NAME                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/ingress-nginx-controller-7c744c9d7f   1         1         1       40s
+
+NAME                                       COMPLETIONS   DURATION   AGE
+job.batch/ingress-nginx-admission-create   1/1           7s         40s
+
+确保处理running的状态
+$ kubectl get po -n ingress-nginx
+NAME                                        READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-5cg6x        0/1     Completed   0          4m15s
+ingress-nginx-admission-patch-sgqcm         0/1     Completed   1          4m15s
+ingress-nginx-controller-7c744c9d7f-6dz4k   1/1     Running     0          4m15s
 ```
 
-#### install GitHub App to your repo with GitHub console
-
-在github->组织-> settings页面 -> installed Github Apps -> 操作你建立的github app -> Configure -> 选择仓库

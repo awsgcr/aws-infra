@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: prow
-  name: internal-ingress-prow
+  namespace: infra-tools
+  name: internal-ingress-nginx
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internal
@@ -25,24 +25,22 @@ metadata:
     alb.ingress.kubernetes.io/subnets: subnet-04c46ef0ca1fa3eda,subnet-0f8102fe299001fbd,subnet-0fc25de1e7029f3e5 # aws_prod_pri_alb_sub_1,2,3
     alb.ingress.kubernetes.io/security-groups: sg-0807e6165278cbacd # aws_prod_internal_alb_ingress_prow_sg sg-0807e6165278cbacd
     alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=300
-    alb.ingress.kubernetes.io/target-type: ip # instance
+    alb.ingress.kubernetes.io/target-type: instance
 spec:
   rules:
-  - hots: prow.danrong.io
-    http:
+  - http:
       paths:
       - backend:
-        path: /hook
-        pathType: Prefix
           service:
-            name: hook
+            name: ssl-redirect
             port:
-              number: 8888
+              name: use-annotation
+        path: /*
+        pathType: ImplementationSpecific
       - backend:
-        path: /
-        pathType: Prefix
           service:
-            name: deck
+            name: ingress-nginx-controller
             port:
               number: 80
-
+        path: /*
+        pathType: ImplementationSpecific
