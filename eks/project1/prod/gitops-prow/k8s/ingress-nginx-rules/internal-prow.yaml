@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: internal-prow
+  namespace: prow
+spec:
+  rules:
+  - host: prow.danrong.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: hook
+            port:
+              number: 8888
+        path: /hook
+        pathType: Prefix
+      - backend:
+          service:
+            name: deck
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
