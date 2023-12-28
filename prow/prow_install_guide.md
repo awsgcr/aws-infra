@@ -189,8 +189,9 @@ prow-controller-manager-749ddfd9f9-5gmdm   0/1     ContainerCreating   0        
 sinker-564b4fc557-9mtqp                    0/1     CrashLoopBackOff    6 (3m45s ago)   9m28s
 statusreconciler-867c49d959-v6rlj          0/1     ContainerCreating   0               9m28s
 tide-7b89d47589-rl275                      0/1     ContainerCreating   0               9m28s
+
 $ kubectl describe pod crier-67b67f4546-cc8rl -n prow
-得到有用的信息
+得到有用的信息，比如
   Normal   Scheduled    8m17s                default-scheduler  Successfully assigned prow/crier-67b67f4546-cc8rl to ip-10-80-17-90.ap-northeast-1.compute.internal
   Warning  FailedMount  99s (x3 over 6m14s)  kubelet            Unable to attach or mount volumes: unmounted volumes=[github-token], unattached volumes=[], failed to process volumes=[]: timed out waiting for the condition
   Warning  FailedMount  2s (x12 over 8m16s)  kubelet            MountVolume.SetUp failed for volume "github-token" : secret "github-token" not found
@@ -200,6 +201,31 @@ $ kubectl describe pod crier-67b67f4546-cc8rl -n prow
   Warning  FailedMount  10m (x8 over 11m)     kubelet            MountVolume.SetUp failed for volume "oauth-token" : secret "oauth-token" not found
   Warning  FailedMount  5m19s (x11 over 11m)  kubelet            MountVolume.SetUp failed for volume "cookie-secret" : secret "cookie" not found
   Warning  FailedMount  74s (x13 over 11m)    kubelet            MountVolume.SetUp failed for volume "oauth-config" : secret "github-oauth-config" not found
+  
+比如发现ghproxy-5bbbd5f5f-6f72l一直在pending，没有启动成功
+$ kubectl get po -n prow
+NAME                                       READY   STATUS             RESTARTS        AGE
+crier-67994f588-456j7                      1/1     Running            7 (10h ago)     10h
+deck-68c6ff47d6-qr8hq                      1/1     Running            0               10h
+ghproxy-5bbbd5f5f-6f72l                    0/1     Pending            0               10h
+hook-866d9bc6dc-pd85r                      1/1     Running            0               10h
+horologium-6bd4767d46-xv4kp                1/1     Running            0               10h
+prow-controller-manager-64cf8b5947-sd8sk   1/1     Running            0               10h
+sinker-7f6979bd86-scp5p                    1/1     Running            0               10h
+statusreconciler-7975d69b4f-xl2sv          1/1     Running            0               10h
+tide-66c79dcd4-znmxg                       0/1     CrashLoopBackOff   120 (49s ago)   9h
+$ kubectl -n prow describe pod ghproxy-5bbbd5f5f-6f72l
+running PreBind plugin "VolumeBinding": binding volumes: timed out waiting for the condition
+$ aws eks describe-addon --cluster-name gitops-prow --addon-name aws-ebs-csi-driver --query "addon.addonVersion" --output text
+An error occurred (ResourceNotFoundException) when calling the DescribeAddon operation: No addon: aws-ebs-csi-driver found in cluster: gitops-prow
+至此发现没有安装aws-ebs-csi-driver
+
+参考手册安装aws-ebs-csi-driver，再次确认发现ghproxy已经running了。
+$ kubectl get po -n prow
+NAME                                       READY   STATUS             RESTARTS         AGE
+crier-67994f588-456j7                      1/1     Running            7 (11h ago)      11h
+deck-68c6ff47d6-qr8hq                      1/1     Running            0                11h
+ghproxy-5bbbd5f5f-6f72l                    1/1     Running            0                11h
 ```
 
 #### check all pod status
@@ -211,15 +237,3 @@ kubectl get pods -n prow
 #### install GitHub App to your repo with GitHub console
 
 在github->组织-> settings页面 -> installed Github Apps -> 操作你建立的github app -> Configure -> 选择仓库
-
-
-
-
-
-#### 
-
-```
-
-```
-
-#### 
