@@ -829,7 +829,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: "statusreconciler"
----
+--- # ghproxy 持久存储
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -842,7 +842,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 50Gi
 --- # ghproxy 组件
 apiVersion: apps/v1
 kind: Deployment
