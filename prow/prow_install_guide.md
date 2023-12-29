@@ -102,6 +102,23 @@ securitygrouppolicies.vpcresources.k8s.aws   2023-12-23T15:30:00Z
 targetgroupbindings.elbv2.k8s.aws            2023-12-25T08:44:40Z
 ```
 
+#### 创建tide的serviceaccount，用户访问S3 bucket
+
+```
+$ vim serviceaccount_tide.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: prow
+  name: tide
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role # just a sample here, replace the account id.
+$ kubectl apply -f serviceaccount_tide.yaml
+确认和tide deployment关联成功
+$ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
+      AWS_ROLE_ARN:                 arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
+```
+
 #### 自定义 prow_install_starter.yaml, config.yaml, plugins.yaml
 
 ```
