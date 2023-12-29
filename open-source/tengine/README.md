@@ -25,7 +25,7 @@ nvme0n1       259:1    0   50G  0 disk
 ##### 安装基础依赖项
 
 ```bash
-sudo yum install -y gcc gcc-c++ automake pcre-devel zlib-devel openssl-devel
+$ sudo yum install -y gcc gcc-c++ automake pcre-devel zlib-devel openssl-devel
 ```
 
 ##### 安装jemalloc依赖
@@ -33,8 +33,8 @@ sudo yum install -y gcc gcc-c++ automake pcre-devel zlib-devel openssl-devel
 让Tengine链接jemalloc库，运行时用jemalloc来分配和释放内存。
 
 ```bash
-cd /tmp
-curl -s -L https://github.com/jemalloc/jemalloc/releases/download/4.4.0/jemalloc-4.4.0.tar.bz2 -o jemalloc-4.4.0.tar.bz2 \
+$ cd /tmp
+$ curl -s -L https://github.com/jemalloc/jemalloc/releases/download/4.4.0/jemalloc-4.4.0.tar.bz2 -o jemalloc-4.4.0.tar.bz2 \
 &&  tar xvf jemalloc-4.4.0.tar.bz2 \
 &&  cp -r jemalloc-4.4.0 /usr/local/src/jemalloc \
 &&  cd /usr/local/src/jemalloc \
@@ -45,8 +45,8 @@ curl -s -L https://github.com/jemalloc/jemalloc/releases/download/4.4.0/jemalloc
 ##### 安装zlib依赖
 
 ```bash
-cd /tmp
-curl -s -L http://www.zlib.net/fossils/zlib-1.2.11.tar.gz -o zlib-1.2.11.tar.gz \
+$ cd /tmp
+$ curl -s -L http://www.zlib.net/fossils/zlib-1.2.11.tar.gz -o zlib-1.2.11.tar.gz \
 &&  tar zxvf zlib-1.2.11.tar.gz \
 &&  cp -r zlib-1.2.11 /usr/local/src/zlib \
 &&  cd  /usr/local/src/zlib \
@@ -57,8 +57,8 @@ curl -s -L http://www.zlib.net/fossils/zlib-1.2.11.tar.gz -o zlib-1.2.11.tar.gz 
 ##### 安装pcre依赖
 
 ```bash
-cd /tmp
-curl -s -L https://jaist.dl.sourceforge.net/project/pcre/pcre/8.43/pcre-8.43.tar.gz -o pcre-8.43.tar.gz \
+$ cd /tmp
+$ curl -s -L https://jaist.dl.sourceforge.net/project/pcre/pcre/8.43/pcre-8.43.tar.gz -o pcre-8.43.tar.gz \
 &&  tar zxvf pcre-8.43.tar.gz \
 &&  cp -r pcre-8.43 /usr/local/src/pcre \
 &&  cd  /usr/local/src/pcre \
@@ -69,8 +69,8 @@ curl -s -L https://jaist.dl.sourceforge.net/project/pcre/pcre/8.43/pcre-8.43.tar
 ##### 下载Tengine源代码
 
 ```bash
-cd /tmp
-mkdir -p /tmp/tengine \
+$ cd /tmp
+$ mkdir -p /tmp/tengine \
 &&  wget http://tengine.taobao.org/download/tengine-2.4.0.tar.gz \
 &&  tar zxvf tengine-2.4.0.tar.gz
 ```
@@ -78,13 +78,13 @@ mkdir -p /tmp/tengine \
 ##### 创建nginx用户
 
 ```bash
-useradd -s /sbin/nologin -M nginx
+$ useradd -s /sbin/nologin -M nginx
 ```
 
 ##### 配置编译选项
 
 ```bash
-./configure \
+$ ./configure \
     --prefix=/etc/nginx \
     --user=nginx \
     --group=nginx \
@@ -115,19 +115,19 @@ useradd -s /sbin/nologin -M nginx
 ##### 编译并安装
 
 ```bash
-make && sudo make install
+$ make && sudo make install
 ```
 
 ##### 设置目录属主属组
 
 ```bash
-chown -R nginx:nginx /etc/nginx
+$ chown -R nginx:nginx /etc/nginx
 ```
 
 ##### 设置软连接
 
 ```bash
-ln -sv /etc/nginx/sbin/nginx /usr/sbin/nginx
+$ ln -sv /etc/nginx/sbin/nginx /usr/sbin/nginx
 ```
 
 ##### 启动服务
@@ -150,7 +150,6 @@ $ ll
 total 4
 -rw-r--r--. 1 root root   0 Dec 29 13:50 access.log
 -rw-r--r--. 1 root root 120 Dec 29 13:47 error.log
-[root@ip-10-80-4-20 nginx]#
 ```
 
 ##### 参考链接
