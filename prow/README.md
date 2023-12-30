@@ -46,6 +46,7 @@ client_id:123451234567890
 client_secret: 12345612345678901234567890123456789012345
 redirect_url: https://prow.danrong.io/github-login/redirect
 final_redirect_url: https://prow.danrong.io/pr
+scope: 
 
 $ kubectl -n prow create secret generic github-oauth-config --from-file=secret=/root/prow_secret/github-oauth-config.yaml
 secret/github-oauth-config created
