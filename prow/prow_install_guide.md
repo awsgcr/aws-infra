@@ -245,6 +245,32 @@ deck-68c6ff47d6-qr8hq                      1/1     Running            0         
 ghproxy-5bbbd5f5f-6f72l                    1/1     Running            0                11h
 ```
 
+#### 安装 prow_pushgateway.yaml
+
+```
+$ cd ~/aws-infra/prow
+$ kubectl apply -f prow_install_pushgateway.yaml
+deployment.apps/pushgateway created
+service/pushgateway created
+configmap/pushgateway-proxy-config created
+deployment.apps/pushgateway-proxy created
+service/pushgateway-external created
+
+kubectl get pod --all-namespaces | grep gatewayå
+prow            pushgateway-69fb5cb89d-6twv2                    1/1     Running            0               107s
+prow            pushgateway-proxy-5f49754768-2lf44              1/1     Running            0               107s
+```
+
+#### 创建labels config，使提交PR时颜色分明
+
+```
+$ cd /aws-infra/prow/config/label-config
+$ kubectl -n prow create cm label-config --from-file=labels.yaml
+configmap/label-config created
+$ kubectl get cm -n prow | grep label
+label-config                          1      42s
+```
+
 #### 安装 nginx-ingress
 
 ```
