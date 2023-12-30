@@ -1,19 +1,26 @@
+branch_spec: &branch_spec
+  - ^master$
 presubmits:
   awsgcr/aws-infra: #需要替换成你的组织名/仓库名
     - name: run-unit-test
+      branches: *branch_spec
+      decorate: true
+      clone_depth: 1
+      shallow_since_relative: -360h
+      run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
-      always_run: true
+      always_run: false
       spec:
         containers:
           - image: golang:alpine  # 为了demo演示，故意先用alpine 单元测试会报错
           # - image: golang:latest  # 正常使用latest          
             command: [ "go","test","." ]
 
-periodics:
-  - interval: 1m
-    agent: kubernetes
-    name: echo-test
-    spec:
-      containers:
-        - image: alpine
-          command: ["/bin/date"]
+# periodics:
+#   - interval: 1m
+#     agent: kubernetes
+#     name: echo-test
+#     spec:
+#       containers:
+#         - image: alpine
+#           command: ["/bin/date"]

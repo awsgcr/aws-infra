@@ -47,6 +47,9 @@ config_updater:
       clusters:
         default:
           - kube-deploy
+    prow/jobs/**/*.yaml:
+      name: job-config
+      gzip: true
 
 plugins:
   awsgcr:
