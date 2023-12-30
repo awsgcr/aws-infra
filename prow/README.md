@@ -12,12 +12,16 @@ $ git clone https://github.com/awsgcr/aws-infra.git
 ```
 参考文档，自行创建EKS集群 
 https://github.com/awsgcr/aws-infra/tree/main/aws/project1/prod/ap-northeast-1/eks
-创建 prow namespace
+```
+
+##### 创建 prow namespace
+
+```
 $ kubectl create ns prow
 namespace/prow created
 ```
 
-#### 创建 `hmac-token` 用于 Github webhooks 的认证
+#### 随机创建 `hmac-token` 用于 Github webhooks 的认证
 
 ```
 $ 基于 openssl rand 方法自动生成，生成一个用于 Github Webhook 认证的 hmac 令牌。
@@ -29,7 +33,7 @@ $ kubectl -n prow create secret generic hmac-token --from-file=hmac=/root/prow_s
 secret/hmac-token created
 ```
 
-#### 生产随机 `cookie secret`
+#### 随机创建 `cookie secret`
 
 ```
 $ openssl rand -out cookie.txt -base64 32
@@ -37,17 +41,26 @@ $ kubectl -n prow create secret generic cookie --from-file=secret=/root/prow_sec
 secret/cookie created
 ```
 
-#### 创建 `github-oauth-config.yaml`
+#### 在 Bot 机器人账号中创建 `github-oauth-config.yaml`
 
 ```
-$ 需要到 https://github.com/settings/developers 上创建 oauth app 获得
+$ 在Bot账号中，创建 oauth app
 $ vim github-oauth-config.yaml
 client_id:123451234567890
-client_secret: 12345612345678901234567890123456789012345
+client_secret: 1234567890123456789012345678901234567890
 redirect_url: https://prow.danrong.io/github-login/redirect
 final_redirect_url: https://prow.danrong.io/pr
-scope: 
+scopes:
+- repo 
+```
 
+```
+$ kubectl get secret github-oauth-config -n prow -oyaml
+确认内容
+$ echo 'secret随机数' | base64 -d
+```
+
+```
 $ kubectl -n prow create secret generic github-oauth-config --from-file=secret=/root/prow_secret/github-oauth-config.yaml
 secret/github-oauth-config created
 ```
@@ -62,15 +75,26 @@ $ kubectl -n prow create secret generic oauth-token --from-file=oauth=/root/prow
 secret/oauth-token created
 ```
 
-#### 至此，生产4个Secret如下
+#### 配置AWS S3 Secret，使得Prow的日志可以存储到S3
+
+```bash
+$ cat s3-credentials
+{
+  "region": "ap-northeast-1"
+}
+$ kubectl -n prow create secret generic s3-credentials --from-file=service-account.json=s3-credentials
+```
+
+#### 至此，生产5个Secret如下
 
 ```
 kubectl get secret -n prow
 NAME                  TYPE     DATA   AGE
-cookie                Opaque   1      30s
-github-oauth-config   Opaque   1      21s
-hmac-token            Opaque   1      41s
-oauth-token           Opaque   1      13s
+cookie                Opaque   1      3d1h
+github-oauth-config   Opaque   1      6h4m
+hmac-token            Opaque   1      3d1h
+oauth-token           Opaque   1      3d1h
+s3-credentials        Opaque   1      5h35m
 ```
 
 #### 部署 ProwJob CRD
@@ -101,11 +125,60 @@ metadata:
   namespace: prow
   name: tide
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role # just a sample here, replace the account id.
+    eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
 $ kubectl apply -f serviceaccount_tide.yaml
 确认和tide deployment关联成功
 $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
       AWS_ROLE_ARN:                 arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
+```
+
+#### 其中pod role的trust relationship如下
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::821278736125:oidc-provider/oidc.eks.ap-northeast-1.amazonaws.com/id/3B25B8991969DEE1082497E0792338E9"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.ap-northeast-1.amazonaws.com/id/3B25B8991969DEE1082497E0792338E9:sub": [
+                        "system:serviceaccount:prow:tide",
+                        "system:serviceaccount:prow:crier",
+                        "system:serviceaccount:prow:deck"
+                    ],
+                    "oidc.eks.ap-northeast-1.amazonaws.com/id/3B25B8991969DEE1082497E0792338E9:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+    ]
+}
+```
+
+#### 同理创建crier, deck的serviceaccount
+
+```bash
+$ vim serviceaccount_crier.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: prow
+  name: crier
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
+
+$ vim serviceaccount_deck.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: prow
+  name: deck
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
 ```
 
 #### 自定义 `prow_install_starter.yaml, config.yaml, plugins.yaml`
