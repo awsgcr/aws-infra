@@ -265,7 +265,7 @@ metadata:
   namespace: ingress-nginx
 spec:
   type: NodePort # LoadBalancer
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local # 不会做机器之间的流量转发
   ipFamilyPolicy: SingleStack
   ipFamilies:
     - IPv4
