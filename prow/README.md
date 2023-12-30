@@ -44,7 +44,9 @@ secret/cookie created
 #### 在 Bot 机器人账号中创建 `github-oauth-config.yaml`
 
 ```
-$ 在Bot账号中，创建 oauth app
+$ 在Bot账号中，创建 oauth app, 比如CICD Prow OAuth App
+Homepage URL: https://prow.danrong.io
+Authorization callback URL: https://prow.danrong.io
 $ vim github-oauth-config.yaml
 client_id:123451234567890
 client_secret: 1234567890123456789012345678901234567890
