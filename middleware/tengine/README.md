@@ -122,6 +122,7 @@ $ make && sudo make install
 
 ```bash
 $ chown -R nginx:nginx /etc/nginx
+$ chown -R nginx:nginx /data/log/nginx
 ```
 
 ##### 设置软连接
@@ -152,6 +153,19 @@ total 4
 -rw-r--r--. 1 root root 120 Dec 29 13:47 error.log
 ```
 
+```bash
+$ cat prow.danrong.io.conf
+$ 注意需要将host透传给下游prow
+server {
+    listen              80 ;
+    server_name         prow.danrong.io;
+    location  / {
+    proxy_set_header Host $host;
+    proxy_pass http://ingress-nginx-alb;
+    }
+}
+```
+
 ##### 参考链接
 
-https://www.cnblogs.com/evescn/p/17336281.html
+本文启动步骤参考公开文档 https://www.cnblogs.com/evescn/p/17336281.html
