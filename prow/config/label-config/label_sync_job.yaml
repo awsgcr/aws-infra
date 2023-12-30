@@ -31,7 +31,7 @@ spec:
         args:
         - --config=/etc/config/labels.yaml
         - --confirm=true
-        - --orgs=awsgcr
+        - --orgs=awsgcr # replace your git org name
         # - --only=awsgcr/aws-infra,awsgcr/gitops-prow-demo
         - --token=/etc/github/oauth
         volumeMounts:
