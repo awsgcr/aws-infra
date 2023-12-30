@@ -34,7 +34,7 @@ spec:
               - --config=/etc/config/labels.yaml
               - --confirm=true
               - --orgs=awsgcr # replace your git org name
-              # - --only=gitcpu-io/install-prow,gitcpu-io/prow-demo
+              # - --only=awsgcr/aws-infra,awsgcr/gitops-prow-demo
               - --token=/etc/github/oauth
               volumeMounts:
               - name: oauth
