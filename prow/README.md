@@ -193,6 +193,9 @@ $ 把plugins.yaml中的组织/仓库替换成你自己的
 $ kubectl -n prow delete cm plugins
 $ kubectl -n prow create cm plugins --from-file=plugins.yaml
 configmap/plugins created
+
+$ 把jobs文件夹里面的内容创建成一个configmap，这样可以把prowjob放在一个单独的文件夹里，而不是config.yaml里面。
+$ kubectl create configmap job-config --from-file=./prow/jobs
 ```
 
 #### 安装 Prow
