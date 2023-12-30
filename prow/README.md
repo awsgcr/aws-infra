@@ -1,30 +1,18 @@
-# Prow installation
+# Prow Install Guide
 
-```sh
-$ openssl rand -hex 20 > /path/to/hook/secret
-$ kubectl create secret generic hmac-token --from-file=hmac=/path/to/hook/secret
-$ kubectl create secret generic oauth-token --from-file=oauth=/path/to/oauth/secret
-$ openssl rand -out cookie.txt -base64 32
-$ kubectl create secret generic github-oauth-config --from-file=secret=<PATH_TO_YOUR_GITHUB_SECRET>
-$ kubectl create secret generic cookie --from-file=secret=<PATH_TO_YOUR_COOKIE_KEY_SECRET>
-$ https://docs.prow.k8s.io/docs/getting-started-deploy/#deploying-prow
-```
-
-#### clone kubernetes test-infra to your local
-
-```
-$ git clone https://github.com/kubernetes/test-infra.git
-```
-
-#### clone prow sample repo to your local
+#### 参考安装手册
 
 ```
 $ git clone https://github.com/gitcpu-io/install-prow.git
+$ git clone https://github.com/awsgcr/aws-infra.git
 ```
 
-#### create prow k8s namespace
+#### 创建AWS EKS集群 
 
 ```
+参考文档，自行创建EKS集群 
+https://github.com/awsgcr/aws-infra/tree/main/aws/project1/prod/ap-northeast-1/eks
+创建 prow namespace
 $ kubectl create ns prow
 namespace/prow created
 ```
