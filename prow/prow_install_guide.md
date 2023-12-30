@@ -121,7 +121,7 @@ $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
 
 #### 自定义 prow_install_starter.yaml, config.yaml, plugins.yaml
 
-```
+```bash
 $ 替换config.yaml中三处域名，和 org/repo 成为你自己的
 $ kubectl -n prow delete cm config
 $ kubectl -n prow create cm config --from-file=config.yaml
@@ -135,7 +135,7 @@ configmap/plugins created
 
 #### 安装 Prow
 
-```
+```bash
 $ 部署 prow_install_starter.yaml
 $ kubectl apply -f prow_install_starter.yaml
 Warning: resource namespaces/prow is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
@@ -247,7 +247,7 @@ ghproxy-5bbbd5f5f-6f72l                    1/1     Running            0         
 
 #### 安装 prow_pushgateway.yaml
 
-```
+```bash
 $ cd ~/aws-infra/prow
 $ kubectl apply -f prow_install_pushgateway.yaml
 deployment.apps/pushgateway created
@@ -255,25 +255,35 @@ service/pushgateway created
 configmap/pushgateway-proxy-config created
 deployment.apps/pushgateway-proxy created
 service/pushgateway-external created
-
-kubectl get pod --all-namespaces | grep gatewayå
+确保pushgateway启动成功
+$ kubectl get pod --all-namespaces | grep gatewayå
 prow            pushgateway-69fb5cb89d-6twv2                    1/1     Running            0               107s
 prow            pushgateway-proxy-5f49754768-2lf44              1/1     Running            0               107s
 ```
 
 #### 创建labels config，使提交PR时颜色分明
 
-```
+```bash
 $ cd /aws-infra/prow/config/label-config
 $ kubectl -n prow create cm label-config --from-file=labels.yaml
 configmap/label-config created
 $ kubectl get cm -n prow | grep label
 label-config                          1      42s
+$ kubectl apply -f label_sync_job.yaml
+job.batch/label-sync created
+$ kubectl -n prow get job
+NAME         COMPLETIONS   DURATION   AGE
+label-sync   0/1           2m53s      2m53s
+$ kubectl apply -f label_sync_cron_job.yaml
+cronjob.batch/label-sync created
+$ kubectl -n prow get cronjob
+NAME         SCHEDULE     SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+label-sync   17 * * * *   False     0        <none>          2m50s
 ```
 
 #### 安装 nginx-ingress
 
-```
+```bash
 $ kubectl apply -f ingress-nginx.yaml
 serviceaccount/ingress-nginx created
 configmap/ingress-nginx-controller created
