@@ -29,7 +29,7 @@ $ kubectl -n prow create secret generic hmac-token --from-file=hmac=/root/prow_s
 secret/hmac-token created
 ```
 
-#### 生产随机 cookie secret
+#### 生产随机 `cookie secret`
 
 ```
 $ openssl rand -out cookie.txt -base64 32
@@ -37,7 +37,7 @@ $ kubectl -n prow create secret generic cookie --from-file=secret=/root/prow_sec
 secret/cookie created
 ```
 
-#### 创建 github-oauth-config.yaml
+#### 创建 `github-oauth-config.yaml`
 
 ```
 $ 需要到 https://github.com/settings/developers 上创建 oauth app 获得
@@ -51,7 +51,7 @@ $ kubectl -n prow create secret generic github-oauth-config --from-file=secret=/
 secret/github-oauth-config created
 ```
 
-#### 在 Bot 机器人账号中配置 personal-access-token
+#### 在 Bot 机器人账号中配置 `personal-access-token`
 
 ```
 $ 需要 bot 账户创建 personal access token 获得,注意这里不是secret,而是oauth。至少需要包含有 repo:status 和 public_repo 的权限。
@@ -107,7 +107,7 @@ $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
       AWS_ROLE_ARN:                 arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
 ```
 
-#### 自定义 prow_install_starter.yaml, config.yaml, plugins.yaml
+#### 自定义 `prow_install_starter.yaml, config.yaml, plugins.yaml`
 
 ```bash
 $ 替换config.yaml中三处域名，和 org/repo 成为你自己的
@@ -233,7 +233,7 @@ deck-68c6ff47d6-qr8hq                      1/1     Running            0         
 ghproxy-5bbbd5f5f-6f72l                    1/1     Running            0                11h
 ```
 
-#### 安装 prow_pushgateway.yaml
+#### 安装 `prow_pushgateway.yaml`
 
 ```bash
 $ cd ~/aws-infra/prow
