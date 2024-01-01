@@ -186,7 +186,7 @@ spec:
             - --tide-url=http://tide/
             - --hook-url=http://hook:8888/plugin-help
             - --config-path=/etc/config/config.yaml
-            # - --job-config=/etc/job-config
+            - --job-config=/etc/job-config
             - --plugin-config=/etc/plugins/plugins.yaml
             - --spyglass=true
             - --rerun-creates-job
@@ -198,15 +198,6 @@ spec:
             - --oauth-url=/github-login
             - --github-oauth-config-file=/etc/githuboauth/secret
             - --cookie-secret=/etc/cookie/secret
-#            - --allow-insecure=true
-#            - --github-app-id=$(GITHUB_APP_ID)
-#            - --github-app-private-key-path=/etc/github/cert
-#          env:
-#            - name: GITHUB_APP_ID
-#              valueFrom:
-#                secretKeyRef:
-#                  name: github-token
-#                  key: appid
           ports:
             - name: http
               containerPort: 8080
@@ -225,14 +216,14 @@ spec:
             - name: config
               mountPath: /etc/config
               readOnly: true
-#            - name: github-token
-#              mountPath: /etc/github
-#              readOnly: true
             - name: plugins
               mountPath: /etc/plugins
               readOnly: true
             - name: s3-credentials
               mountPath: /etc/s3-credentials
+              readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
               readOnly: true
           livenessProbe:
             httpGet:
@@ -260,15 +251,15 @@ spec:
         - name: config
           configMap:
             name: config
-#        - name: github-token
-#          secret:
-#            secretName: 
         - name: plugins
           configMap:
             name: plugins
         - name: s3-credentials
           secret:
             secretName: s3-credentials
+        - name: job-config
+          configMap:
+            name: job-config
 ---
 apiVersion: v1
 kind: Service
@@ -315,16 +306,22 @@ spec:
               containerPort: 9090
           args:
             - --config-path=/etc/config/config.yaml
-            # - --job-config-path=/etc/job-config
+            - --job-config-path=/etc/job-config
             - --dry-run=false
           volumeMounts:
             - name: config
               mountPath: /etc/config
               readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
+              readOnly: true
       volumes:
         - name: config
           configMap:
             name: config
+        - name: job-config
+          configMap:
+            name: job-config
 ---
 apiVersion: v1
 kind: Service
@@ -366,7 +363,7 @@ spec:
           args:
             - --dry-run=false
             - --config-path=/etc/config/config.yaml
-            # - --job-config-path=/etc/job-config
+            - --job-config-path=/etc/job-config
             - --github-token-path=/etc/github/oauth            
             - --github-endpoint=http://ghproxy
             - --github-endpoint=https://api.github.com
@@ -374,15 +371,6 @@ spec:
             - --s3-credentials-file=/etc/s3-credentials/service-account.json
             - --status-path=s3://aws-gcr-prow-logs/tide/tide-status
             - --history-uri=s3://aws-gcr-prow-logs/tide/tide-history.json
-
-            # - --github-app-id=$(GITHUB_APP_ID)
-            # - --github-app-private-key-path=/etc/github/cert
-          # env:
-          #   - name: GITHUB_APP_ID
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: github-token
-          #         key: appid
           ports:
             - name: http
               containerPort: 8888
@@ -398,6 +386,9 @@ spec:
             - name: s3-credentials
               mountPath: /etc/s3-credentials
               readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
+              readOnly: true
       volumes:
         - name: oauth
           secret:
@@ -408,6 +399,9 @@ spec:
         - name: s3-credentials
           secret:
             secretName: s3-credentials
+        - name: job-config
+          configMap:
+            name: job-config
 ---
 apiVersion: v1
 kind: Service
@@ -455,20 +449,12 @@ spec:
             - --continue-on-error=true
             - --plugin-config=/etc/plugins/plugins.yaml
             - --config-path=/etc/config/config.yaml
-            # - --job-config-path=/etc/job-config
+            - --job-config-path=/etc/job-config
             - --github-token-path=/etc/github/oauth
             - --github-endpoint=http://ghproxy
             - --github-endpoint=https://api.github.com
             - --s3-credentials-file=/etc/s3-credentials/service-account.json
             - --status-path=s3://aws-gcr-prow-logs/status-reconciler/status-reconciler-status
-          #   - --github-app-id=$(GITHUB_APP_ID)
-          #   - --github-app-private-key-path=/etc/github/cert
-          # env:
-          #   - name: GITHUB_APP_ID
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: github-token
-          #         key: appid
           volumeMounts:
             - name: oauth
               mountPath: /etc/github
@@ -476,9 +462,9 @@ spec:
             - name: config
               mountPath: /etc/config
               readOnly: true
-            # - name: jobConfig
-            #   mountPath: /etc/job-config
-            #   readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
+              readOnly: true
             - name: plugins
               mountPath: /etc/plugins
               readOnly: true
@@ -492,15 +478,15 @@ spec:
         - name: config
           configMap:
             name: config
-        # - name: jobConfig
-        #   configMap:
-        #     name: jobConfig
         - name: plugins
           configMap:
             name: plugins
         - name: s3-credentials
           secret:
             secretName: s3-credentials
+        - name: job-config
+          configMap:
+            name: job-config
 ---
 apiVersion: v1
 kind: Service
@@ -921,19 +907,11 @@ spec:
           args:
             - --dry-run=false
             - --config-path=/etc/config/config.yaml
-            # - --job-config-path=/etc/job-config
+            - --job-config-path=/etc/job-config
             - --github-token-path=/etc/github/oauth
             - --github-endpoint=http://ghproxy
             - --github-endpoint=https://api.github.com
             - --enable-controller=plank
-          #   - --github-app-id=$(GITHUB_APP_ID)
-          #   - --github-app-private-key-path=/etc/github/cert
-          # env:
-          #   - name: GITHUB_APP_ID
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: github-token
-          #         key: appid
           image: gcr.io/k8s-prow/prow-controller-manager:v20211111-bce61c7c4a
           volumeMounts:
             - name: oauth
@@ -942,9 +920,9 @@ spec:
             - name: config
               mountPath: /etc/config
               readOnly: true
-            # - name: jobConfig
-            #   mountPath: /etc/job-config
-            #   readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
+              readOnly: true
       volumes:
         - name: oauth
           secret:
@@ -952,9 +930,9 @@ spec:
         - name: config
           configMap:
             name: config
-        # - name: jobConfig
-        #   configMap:
-        #     name: jobConfig
+        - name: job-config
+          configMap:
+            name: job-config
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1082,28 +1060,20 @@ spec:
           args:
             - --blob-storage-workers=10
             - --config-path=/etc/config/config.yaml
-            # - --job-config-path=/etc/job-config
+            - --job-config-path=/etc/job-config
             - --s3-credentials-file=/etc/s3-credentials/service-account.json
             - --github-endpoint=http://ghproxy
             - --github-endpoint=https://api.github.com
             - --github-token-path=/etc/github/oauth
             - --github-workers=10
             - --kubernetes-blob-storage-workers=10
-          #   - --github-app-id=$(GITHUB_APP_ID)
-          #   - --github-app-private-key-path=/etc/github/cert
-          # env:
-          #   - name: GITHUB_APP_ID
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: github-token
-          #         key: appid
           volumeMounts:
             - name: config
               mountPath: /etc/config
               readOnly: true
-            # - name: jobConfig
-            #   mountPath: /etc/job-config
-            #   readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
+              readOnly: true
             - name: oauth
               mountPath: /etc/github
               readOnly: true
@@ -1114,9 +1084,9 @@ spec:
         - name: config
           configMap:
             name: config
-        # - name: jobConfig
-        #   configMap:
-        #     name: jobConfig
+        - name: job-config
+          configMap:
+            name: job-config
         - name: oauth
           secret:
             secretName: oauth-token
@@ -1206,14 +1176,6 @@ stringData:
     {
       "region": "ap-northeast-1"
     }
-    # {
-    #   "region": "minio",
-    #   "access_key": "minioadmin",
-    #   "endpoint": "minio.prow.svc.cluster.local",
-    #   "insecure": true,
-    #   "s3_force_path_style": true,
-    #   "secret_key": "minioadmin"
-    # }
 ---
 apiVersion: v1
 kind: Secret
