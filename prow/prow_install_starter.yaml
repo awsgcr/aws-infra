@@ -33,18 +33,10 @@ spec:
           args:
             - --dry-run=false
             - --config-path=/etc/config/config.yaml
-            # - --job-config-path=/etc/job-config
+            - --job-config-path=/etc/job-config
             - --github-token-path=/etc/github/oauth 
             - --github-endpoint=http://ghproxy
             - --github-endpoint=https://api.github.com
-            # - --github-app-id=$(GITHUB_APP_ID)
-            # - --github-app-private-key-path=/etc/github/cert
-          # env:
-          #   - name: GITHUB_APP_ID
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: github-token
-          #         key: appid
           ports:
             - name: http
               containerPort: 8888
@@ -62,6 +54,9 @@ spec:
               readOnly: true
             - name: plugins
               mountPath: /etc/plugins
+              readOnly: true
+            - name: job-config
+              mountPath: /etc/job-config
               readOnly: true
           livenessProbe:
             httpGet:
@@ -89,6 +84,9 @@ spec:
         - name: plugins
           configMap:
             name: plugins
+        - name: job-config
+          configMap:
+            name: job-config
 ---
 apiVersion: v1
 kind: Service
