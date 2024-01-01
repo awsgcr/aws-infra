@@ -1,5 +1,17 @@
 # Prow Install Guide
 
+#### Prow微服务架构
+
+![prow_microservice_architecture](./image/prow_microservice_architecture.png)
+
+- `Hook` 是整个系统中最重要的一块。这是一个无状态服务，用于监听 GitHub Webhooks 并分发事件到相应的 Plugins。这些 Plugin 能够实现触发 Jobs、处理 /foo 风格的命令、发送信息到 Slack 等功能。 参阅 [prow/plugins](https://github.com/kubernetes/test-infra/blob/master/prow/plugins) 以获取更多关于 Plugin 的信息。
+- `Plank` 是 Prow 系统的 controller，用于管理运行在 Kubernetes Pods 中的 jobs 的执行与生命周期。
+- `Deck` 是 Prow 系统的可视化界面，用于展示 Jobs 状态、PR 状态、自动化合并的状态和历史记录、命令和插件等帮助信息。
+- `Horologium` 用于触发定时任务 （periodic jobs）。
+- `Sinker` 用于清理旧的任务和 pods。
+- `Crier` 用于报告 Prowjob 的状态。目前支持的 reporter 有 Gerrit、Pubsub、GitHub、Slack。
+- `Tide` 用于自动重新测试 PR，并根据预先设定好的合并条件，对 PR 进行自动化合并。
+
 #### 参考安装手册
 
 ```
@@ -42,6 +54,8 @@ secret/cookie created
 ```
 
 #### 在 Bot 机器人账号中创建 `github-oauth-config.yaml`
+
+由于 PR Status 是针对项目的所有贡献者的，所以当贡献者访问 Prow 的 PR Status 功能时，浏览器会跳转到 Github 使用 OAuth 认证获得用户的授权后，浏览器会自动跳转回 PR Status 界面显示该贡献者相关的 PR 列表。
 
 ```
 $ 在Bot账号中，创建 oauth app, 比如CICD Prow OAuth App
@@ -191,10 +205,20 @@ $ kubectl -n prow delete cm config
 $ kubectl -n prow create cm config --from-file=config.yaml
 configmap/config created
 
+$ 更新config里面的配置
+$ kubectl -n prow create cm config --from-file=config.yaml=./config.yaml --dry-run -o yaml \
+  | kubectl replace configmap config -f -
+
 $ 把plugins.yaml中的组织/仓库替换成你自己的
 $ kubectl -n prow delete cm plugins
 $ kubectl -n prow create cm plugins --from-file=plugins.yaml
 configmap/plugins created
+
+$ 更新plugins里面的配置
+$ kubectl -n prow create cm plugins --from-file=plugins.yaml=./plugins.yaml --dry-run -o yaml \
+  | kubectl replace configmap plugins -f -
+# 验证配置是否保存成功
+kubectl get cm plugins -o yaml
 
 $ 把jobs文件夹里面的内容创建成一个configmap，这样可以把prowjob放在一个单独的文件夹里，而不是config.yaml里面。
 $ kubectl create configmap job-config --from-file=./prow/jobs

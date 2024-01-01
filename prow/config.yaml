@@ -126,19 +126,19 @@ tide:
 
 presets:
   - labels:
-      preset-deploy-prod: "true"
+      preset-project1-prod-deploy-all: "true"
     volumes:
-      - name: prod-kube-config
+      - name: kube-config
         configMap:
-          name: prod-kube-config
-      - name: prod-aws-config
+          name: project1-prod-prow-kube-config
+      - name: aws-config
         configMap:
-          name: prod-aws-config
+          name: project1-prod-prow-aws-config
     volumeMounts:
-      - name: prod-kube-config
+      - name: kube-config
         mountPath: /root/.kube/
         readOnly: true
-      - name: prod-aws-config
+      - name: aws-config
         mountPath: /root/.aws/config
         subPath: config
         readOnly: true
