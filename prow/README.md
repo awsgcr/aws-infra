@@ -135,6 +135,8 @@ targetgroupbindings.elbv2.k8s.aws            2023-12-25T08:44:40Z
 
 ```
 $ vim serviceaccount_tide.yaml
+$ vim serviceaccount_deck.yaml
+$ vim serviceaccount_crier.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -142,8 +144,12 @@ metadata:
   name: tide
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
+
 $ kubectl apply -f serviceaccount_tide.yaml
-确认和tide deployment关联成功
+$ kubectl apply -f serviceaccount_deck.yaml
+$ kubectl apply -f serviceaccount_crier.yaml
+
+确认和serviceaccount和deployment关联成功
 $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
       AWS_ROLE_ARN:                 arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
 ```
