@@ -142,3 +142,12 @@ presets:
         mountPath: /root/.aws/config
         subPath: config
         readOnly: true
+
+periodics:
+  - interval: 1m
+    agent: kubernetes
+    name: echo-test
+    spec:
+      containers:
+        - image: alpine
+          command: ["/bin/date"]
