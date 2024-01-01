@@ -1,5 +1,17 @@
 # Prow Install Guide
 
+#### Prow微服务架构
+
+![prow_microservice_architecture](./image/prow_microservice_architecture.png)
+
+- `Hook` 是整个系统中最重要的一块。这是一个无状态服务，用于监听 GitHub Webhooks 并分发事件到相应的 Plugins。这些 Plugin 能够实现触发 Jobs、处理 /foo 风格的命令、发送信息到 Slack 等功能。 参阅 [prow/plugins](https://github.com/kubernetes/test-infra/blob/master/prow/plugins) 以获取更多关于 Plugin 的信息。
+- `Plank` 是 Prow 系统的 controller，用于管理运行在 Kubernetes Pods 中的 jobs 的执行与生命周期。
+- `Deck` 是 Prow 系统的可视化界面，用于展示 Jobs 状态、PR 状态、自动化合并的状态和历史记录、命令和插件等帮助信息。
+- `Horologium` 用于触发定时任务 （periodic jobs）。
+- `Sinker` 用于清理旧的任务和 pods。
+- `Crier` 用于报告 Prowjob 的状态。目前支持的 reporter 有 Gerrit、Pubsub、GitHub、Slack。
+- `Tide` 用于自动重新测试 PR，并根据预先设定好的合并条件，对 PR 进行自动化合并。
+
 #### 参考安装手册
 
 ```

@@ -2,7 +2,7 @@ branch_spec: &branch_spec
   - ^master$
 presubmits:
   awsgcr/aws-infra: #需要替换成你的组织名/仓库名
-    - name: run-unit-test
+    - name: pull-unit-test # convention: (job type)-(repo name)-(suite name)
       branches: *branch_spec
       decorate: true
       clone_depth: 1
@@ -15,12 +15,3 @@ presubmits:
           - image: golang:alpine  # 为了demo演示，故意先用alpine 单元测试会报错
           # - image: golang:latest  # 正常使用latest          
             command: [ "go","test","." ]
-
-# periodics:
-#   - interval: 1m
-#     agent: kubernetes
-#     name: echo-test
-#     spec:
-#       containers:
-#         - image: alpine
-#           command: ["/bin/date"]

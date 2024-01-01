@@ -25,28 +25,36 @@ file_size_limit:
 
 config_updater:
   maps:
-    prow/config.yaml:
+    # 加载 Prow config 本身配置文件
+    prow/config.yaml: 
       name: config
+    # 加载 Prow plugins 本身配置文件
     prow/plugins.yaml:
       name: plugins
-    prow/config/label-config/*: # 加载 /prow/config/label-config/labels.yaml 文件, 不同项目进行不同配色
+    # 加载 /prow/config/label-config/labels.yaml 文件, PR会进行不同颜色配色
+    prow/config/label-config/*:
       name: label-config
       key: config
       clusters:
         default:
           - test-pods
-    prow/config/aws-config/*: # 加载 /prow/config/aws-config/aws-deploy-config 文件, AWS资源部署
+    # 加载 /prow/config/aws-config/aws-deploy-config 文件, 进行AWS资源部署
+    prow/config/aws-config/*:
       name: aws-deploy-config
       key: config
       clusters:
         default:
           - test-pods
-    prow/config/kube-deploy.yaml: # 加载 /prow/config/kube-deploy.yaml 文件, K8S资源部署
+          - kube-deploy
+    # 加载 /prow/config/kube-deploy.yaml 文件, 进行K8S资源部署
+    prow/config/kube-deploy.yaml:
       name: kube-deploy-config
       key: config
       clusters:
         default:
+          - test-pods
           - kube-deploy
+    # 加载 /prow/jobs/ 里面所有文件，配置自定义脚本
     prow/jobs/**/*.yaml:
       name: job-config
       gzip: true
@@ -72,7 +80,7 @@ plugins:
       - size # Auto-label size of PR
       - skip # Allows cleaning up stale commit statuses
       - trigger # Allow people to configure CI jobs to /test
-      - verify-owners   # Validates OWNERS file changes in PRs.
+      - verify-owners # Validates OWNERS file changes in PRs.
       - welcome
       - retitle
       - weainformer # notify users when they are being requested to review a PR
