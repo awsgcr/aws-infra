@@ -145,13 +145,13 @@ presets:
 
 presubmits:
   awsgcr/aws-infra:
-    - name: pull-unit-test # convention: (job type)-(repo name)-(suite name)
+    - name: pull-unit-test
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
       always_run: false
       spec:
         containers:
-          - image: golang:alpine  # 为了demo演示，故意先用alpine 单元测试会报错, 正常使用latest          
+          - image: golang:alpine # use latest by default
             command: [ "go","test","." ]
 
 periodics:
