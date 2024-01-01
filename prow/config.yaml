@@ -155,7 +155,7 @@ presubmits:
             command: [ "go","test","." ]
 
 periodics:
-  - interval: 3m
+  - interval: 10m
     agent: kubernetes
     name: echo-test
     spec:
