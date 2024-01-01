@@ -43,6 +43,8 @@ secret/cookie created
 
 #### 在 Bot 机器人账号中创建 `github-oauth-config.yaml`
 
+由于 PR Status 是针对项目的所有贡献者的，所以当贡献者访问 Prow 的 PR Status 功能时，浏览器会跳转到 Github 使用 OAuth 认证获得用户的授权后，浏览器会自动跳转回 PR Status 界面显示该贡献者相关的 PR 列表。
+
 ```
 $ 在Bot账号中，创建 oauth app, 比如CICD Prow OAuth App
 Homepage URL: https://prow.danrong.io
@@ -191,10 +193,20 @@ $ kubectl -n prow delete cm config
 $ kubectl -n prow create cm config --from-file=config.yaml
 configmap/config created
 
+$ 更新config里面的配置
+$ kubectl -n prow create cm config --from-file=config.yaml=./config.yaml --dry-run -o yaml \
+  | kubectl replace configmap config -f -
+
 $ 把plugins.yaml中的组织/仓库替换成你自己的
 $ kubectl -n prow delete cm plugins
 $ kubectl -n prow create cm plugins --from-file=plugins.yaml
 configmap/plugins created
+
+$ 更新plugins里面的配置
+$ kubectl -n prow create cm plugins --from-file=plugins.yaml=./plugins.yaml --dry-run -o yaml \
+  | kubectl replace configmap plugins -f -
+# 验证配置是否保存成功
+kubectl get cm plugins -o yaml
 
 $ 把jobs文件夹里面的内容创建成一个configmap，这样可以把prowjob放在一个单独的文件夹里，而不是config.yaml里面。
 $ kubectl create configmap job-config --from-file=./prow/jobs
