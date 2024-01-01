@@ -200,28 +200,30 @@ metadata:
 #### 自定义 `prow_install_starter.yaml, config.yaml, plugins.yaml`
 
 ```bash
-$ 替换config.yaml中三处域名，和 org/repo 成为你自己的
+替换config.yaml中三处域名，和 org/repo 成为你自己的
 $ kubectl -n prow delete cm config
 $ kubectl -n prow create cm config --from-file=config.yaml
 configmap/config created
 
-$ 更新config里面的配置
+更新config里面的配置
 $ kubectl -n prow create cm config --from-file=config.yaml=./config.yaml --dry-run -o yaml \
-  | kubectl replace configmap config -f -
+  | kubectl -n prow replace cm config -f -
 
-$ 把plugins.yaml中的组织/仓库替换成你自己的
+把plugins.yaml中的组织/仓库替换成你自己的
 $ kubectl -n prow delete cm plugins
 $ kubectl -n prow create cm plugins --from-file=plugins.yaml
 configmap/plugins created
 
 $ 更新plugins里面的配置
 $ kubectl -n prow create cm plugins --from-file=plugins.yaml=./plugins.yaml --dry-run -o yaml \
-  | kubectl replace configmap plugins -f -
-# 验证配置是否保存成功
-kubectl get cm plugins -o yaml
+  | kubectl -n prow replace cm plugins -f -
+验证配置是否保存成功
+$ kubectl -n prow get cm plugins -o yaml
 
 $ 把jobs文件夹里面的内容创建成一个configmap，这样可以把prowjob放在一个单独的文件夹里，而不是config.yaml里面。
-$ kubectl create configmap job-config --from-file=./prow/jobs
+$ cd /root/aws-infra/prow
+$ kubectl -n prow create configmap job-config --from-file=./jobs
+configmap/job-config created
 ```
 
 #### 安装 Prow
