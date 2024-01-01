@@ -1,7 +1,7 @@
 branch_spec: &branch_spec
   - ^master$
 presubmits:
-  awsgcr/aws-infra: #需要替换成你的组织名/仓库名
+  awsgcr/aws-infra:
     - name: pull-unit-test # convention: (job type)-(repo name)-(suite name)
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
