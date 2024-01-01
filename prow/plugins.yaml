@@ -80,9 +80,8 @@ plugins:
       - repo-permission-alert # notify to wea group when teams and members in repo got permission changes
       # - yuks # Let prow tell a /joke
 
-# this is yaml-validator config
 yaml-validator:
-  devops/devops-infra:
+  awsgcr/aws-infra:
     - files: ^prow/jobs/.*\.yaml$
       type: prowjob
     - files: ^.*\.ya?ml$
