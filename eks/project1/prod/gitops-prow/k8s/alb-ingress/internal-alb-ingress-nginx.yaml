@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: infra-tools
+  namespace: ingress-nginx
   name: internal-ingress-nginx
   annotations:
     kubernetes.io/ingress.class: alb
