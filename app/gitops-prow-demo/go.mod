@@ -1,3 +1,3 @@
-module github.com/gitcpu-io/prow-demo
+module github.com/awsgcr/aws-infra/app
 
 go 1.16
