@@ -153,6 +153,8 @@ presubmits:
         containers:
           - image: golang:alpine # use latest by default
             command: [ "go","test","." ]
+
+presubmits:
   awsgcr/gitops-prow-demo:
     - name: pull-gitops-prow-demo-unit-test
       agent: kubernetes
