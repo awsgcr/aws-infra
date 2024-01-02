@@ -145,18 +145,8 @@ presets:
 
 presubmits:
   awsgcr/aws-infra:
-    - name: pull-unit-test
+    - name: pull-jobs-unit-test
       run_if_changed: '^app/gitops-prow-demo/main.go$'
-      agent: kubernetes
-      always_run: false
-      spec:
-        containers:
-          - image: golang:alpine # use latest by default
-            command: [ "go","test","." ]
-
-presubmits:
-  awsgcr/gitops-prow-demo:
-    - name: pull-gitops-prow-demo-unit-test
       agent: kubernetes
       always_run: false
       spec:
