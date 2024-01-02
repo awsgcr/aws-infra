@@ -12,7 +12,7 @@ presubmits:
             command: [ "go","test","." ]
 
 presubmits:
-  awsgcr/aws-infra:
+  awsgcr/gitops-prow-demo:
     - name: pull-gitops-prow-demo-unit-test
       agent: kubernetes
       always_run: false
