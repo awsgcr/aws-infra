@@ -24,5 +24,4 @@ __pycache__/
 *.pyc
 .terraform
 .terraform.*
-backend.tf
 .terraformignore
