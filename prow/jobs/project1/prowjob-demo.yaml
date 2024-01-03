@@ -2,7 +2,7 @@ branch_spec: &branch_spec
   - ^master$
 presubmits:
   awsgcr/aws-infra:
-    - name: pull-jobs-unit-test
+    - name: presubmit-run-unit-test
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
       always_run: false
