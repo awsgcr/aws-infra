@@ -131,12 +131,10 @@ securitygrouppolicies.vpcresources.k8s.aws   2023-12-23T15:30:00Z
 targetgroupbindings.elbv2.k8s.aws            2023-12-25T08:44:40Z
 ```
 
-#### 创建tide的serviceaccount，用户访问S3 bucket
+#### 创建tide的serviceaccount，用于访问S3 bucket
 
 ```
 $ vim serviceaccount_tide.yaml
-$ vim serviceaccount_deck.yaml
-$ vim serviceaccount_crier.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -144,10 +142,6 @@ metadata:
   name: tide
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
-
-$ kubectl apply -f serviceaccount_tide.yaml
-$ kubectl apply -f serviceaccount_deck.yaml
-$ kubectl apply -f serviceaccount_crier.yaml
 
 确认和serviceaccount和deployment关联成功
 $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
@@ -168,12 +162,13 @@ $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
                 "StringEquals": {
+                    "oidc.eks.ap-northeast-1.amazonaws.com/id/3B25B8991969DEE1082497E0792338E9:aud": "sts.amazonaws.com",
                     "oidc.eks.ap-northeast-1.amazonaws.com/id/3B25B8991969DEE1082497E0792338E9:sub": [
                         "system:serviceaccount:prow:tide",
                         "system:serviceaccount:prow:crier",
-                        "system:serviceaccount:prow:deck"
-                    ],
-                    "oidc.eks.ap-northeast-1.amazonaws.com/id/3B25B8991969DEE1082497E0792338E9:aud": "sts.amazonaws.com"
+                        "system:serviceaccount:prow:deck",
+                        "system:serviceaccount:prow:statusreconciler"
+                    ]
                 }
             }
         }
@@ -181,7 +176,7 @@ $ kubectl describe pod tide-66c79dcd4-znmxg -n prow | grep AWS_ROLE_ARN
 }
 ```
 
-#### 同理创建crier, deck的serviceaccount
+#### 同理创建crier, deck, statusreconciler的serviceaccount，用于访问S3 bucket
 
 ```bash
 $ vim serviceaccount_crier.yaml
@@ -201,6 +196,19 @@ metadata:
   name: deck
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
+
+$ vim serviceaccount_statusreconciler.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: prow
+  name: statusreconciler
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::821278736125:role/aws_prod_eks_gitops_prow_pod_role
+
+$ kubectl apply -f serviceaccount_statusreconciler.yaml
+$ kubectl apply -f serviceaccount_deck.yaml
+$ kubectl apply -f serviceaccount_crier.yaml
 ```
 
 #### 自定义 `prow_install_starter.yaml, config.yaml, plugins.yaml`
