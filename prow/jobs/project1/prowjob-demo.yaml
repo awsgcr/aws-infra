@@ -8,5 +8,5 @@ presubmits:
       always_run: false
       spec:
         containers:
-          - image: golang:latest
+          - image: golang:alpine
             command: [ "go","test","." ]
