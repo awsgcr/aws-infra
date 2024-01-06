@@ -144,17 +144,6 @@ presets:
         readOnly: true
 
 presubmits:
-  awsgcr/aws-infra:
-    - name: presubmit-run-unit-test
-      run_if_changed: '^app/gitops-prow-demo/main.go$'
-      agent: kubernetes
-      always_run: false
-      spec:
-        containers:
-          - image: golang:latest
-            command: [ "go","test","." ]
-
-presubmits:
   awsgcr/gitops-prow-demo:
     - name: presubmit-run-unit-test
       agent: kubernetes
