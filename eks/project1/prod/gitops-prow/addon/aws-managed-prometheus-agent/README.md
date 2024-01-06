@@ -92,3 +92,17 @@ Get the PushGateway URL by running these commands in the same shell:
 For more information on running Prometheus, visit:
 https://prometheus.io/
 ```
+
+### **确认prometheus Pod都启动成功**
+
+```
+kubectl get po -n monitoring
+NAME                                                              READY   STATUS    RESTARTS   AGE
+aws-managed-prometheus-agent-alertmanager-0                       1/1     Running   0          17h
+aws-managed-prometheus-agent-kube-state-metrics-6486786fd-chjg6   1/1     Running   0          17h
+aws-managed-prometheus-agent-prometheus-node-exporter-7sp9r       1/1     Running   0          17h
+aws-managed-prometheus-agent-prometheus-node-exporter-9kvnv       1/1     Running   0          17h
+aws-managed-prometheus-agent-prometheus-node-exporter-qmltp       1/1     Running   0          17h
+aws-managed-prometheus-agent-prometheus-pushgateway-64bfc6lfzg7   1/1     Running   0          17h
+aws-managed-prometheus-agent-server-5bb5f99c7b-jf4ww              2/2     Running   0          17h
+```
