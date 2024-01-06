@@ -87,6 +87,9 @@ plugins:
       - wip # Auto-hold PRs with WIP in title
       - repo-permission-alert # notify to wea group when teams and members in repo got permission changes
       # - yuks # Let prow tell a /joke
+  awsgcr/aws-infra:
+    plugins:
+      - config-updater
 
 yaml-validator:
   awsgcr/aws-infra:
