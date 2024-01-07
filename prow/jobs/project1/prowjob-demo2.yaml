@@ -1,0 +1,18 @@
+branch_spec: &branch_spec
+  - ^master$
+presubmits:
+  awsgcr/aws-infra:
+    - name: presubmit-run-infra-test
+      run_if_changed: '^app/gitops-prow-demo/main.go$'
+      agent: kubernetes
+      always_run: false
+    spec:
+      containers:
+      - command:
+        - echo
+        - "Prow Rocks"
+        env:
+        - name: AWS_REGION
+          value: ap-northeast-1
+        image: debian:buster
+        imagePullPolicy: Always
