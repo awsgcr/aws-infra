@@ -45,6 +45,6 @@ ENV GOPRIVATE github.com
 COPY ./library/prow /bin/prow
 RUN chmod +x /bin/prow
 ENV LC_CTYPE en_US.UTF-8
-RUN ln -fs /bin/bash /bin/sh # 切换sh为bash
+RUN ln -fs /bin/bash /bin/sh
 
 WORKDIR /workspace/src
