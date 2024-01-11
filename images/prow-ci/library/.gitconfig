@@ -1,0 +1,14 @@
+[user]
+	name = awsinfra-bot
+	email = mymaodanrong@gmail.com
+[hub]
+	host = github.com
+	protocol = https
+[url "https://"]
+	insteadOf = git://
+[url "https://github.com/"]
+	insteadOf = github.com:
+[credential]
+	helper = store
+[http "https://github.com/"]
+	sslVerify = false
