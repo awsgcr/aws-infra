@@ -1,0 +1,33 @@
+branch_spec: &branch_spec
+  - ^master$
+
+# trigger git folder location: eks/project/env/eks_cluster_name/(iam-sa|aws)/namespace/application_name/iam-policy.json
+postsubmits:
+  awsgcr/aws-infra:
+    - name: postsubmit-aws-s3-upload
+      branches: *branch_spec
+      decorate: true    
+      run_if_changed: '^eks/(project1|project2)/[^/]+/[^/]+/aws/[^/]+/[^/]+/iam-policy\.json$'
+      labels:
+        preset-aws-shared-conf: "true"
+        git: "true"
+      rerun_auth_config:
+        github_users:
+          - TerrificMao
+      spec:
+        serviceAccountName: prowjob-aws-s3-upload-pipeline-sa
+        containers:
+          - image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240110
+            command:
+              - /bin/bash
+            args:
+              - -c
+              - |
+                source $(which error-trap)           
+                rm -rf .git
+                aws s3 cp --recursive . s3://damonmao-public-share/static/prowjob/prowjob-aws-s3-upload/ --copy-props none --profile prowjob-aws-s3-upload
+                aws cloudfront create-invalidation --distribution-id E6I0Q9FNG0TTO --paths "/*" --profile prowjob-aws-s3-upload
+                echo "✅ S3 Uploaded Successfully!" >> .content
+                echo "✅ Clean CDN Cache Successfully!" >> .content
+                set +x
+                pr-comment --repo_owner ${REPO_OWNER} --repo_name ${REPO_NAME} --pull_base_sha ${PULL_BASE_SHA} -f .content

@@ -1,0 +1,4 @@
+[profile prowjob-aws-s3-upload]
+role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_pod_s3_upload_role
+source_profile = prowjob-aws-static-s3-pipeline-sa
+role_session_name = prowjob-aws-s3-upload
