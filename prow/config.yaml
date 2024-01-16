@@ -7,6 +7,9 @@ in_repo_config:
     "*": true
 
 plank: # replace 3 domain names
+  job_url_template: 'https://prow.danrong.io/view/s3/aws-gcr-prow-logs{{if
+    eq .Spec.Type "presubmit"}}/pr-logs/pull/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with
+    index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/pr-logs/pull/batch{{else}}/logs{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}'
   job_url_prefix_config:
     "*": http://prow.danrong.io/view/
   report_templates:
