@@ -23,7 +23,7 @@ RUN bash install.sh && rm install.sh
 RUN DPKG_ARCH="$(dpkg --print-architecture)" \
     && distro=$(lsb_release -is | awk '{print tolower($0)}') \
     && mkdir -p /etc/apt/keyrings \
-    && ( curl -fsSL https://download.docker.com/linux/${distro}/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg ) \
+    && ( curl -fsSL https://download.docker.com/linux/${distro}/gpg | gpg --dearmor --no-tty -o /etc/apt/keyrings/docker.gpg ) \
     && version=$(lsb_release -cs | sed 's/bookworm\|n\/a/bullseye/g') \
     && ( echo "deb [arch=${DPKG_ARCH} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${distro} ${version} stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null ) \
     && apt-get update \
