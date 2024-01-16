@@ -238,6 +238,26 @@ $ 把jobs文件夹里面的内容创建成一个configmap，这样可以把prowj
 $ cd /root/aws-infra/prow
 $ kubectl -n prow create configmap job-config --from-file=./jobs
 configmap/job-config created
+
+$ 把./config/aws-config文件夹里面的内容创建成一个configmap
+$ kubectl -n prow create configmap aws-deploy-config --from-file=./config/aws-config
+configmap/aws-deploy-config created
+$ 会发现该路径下的配置已经自动加载到configmap里面了，如果有新增，也会自动注入到configmap里面。
+$ kubectl get cm aws-deploy-config -n prow -oyaml
+apiVersion: v1
+data:
+  project1-aws-config: |
+    [profile prowjob-aws-s3-upload]
+    role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_pod_s3_upload_role
+    source_profile = prowjob-aws-static-s3-pipeline-sa
+    role_session_name = prowjob-aws-s3-upload
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2024-01-16T10:22:22Z"
+  name: aws-deploy-config
+  namespace: prow
+  resourceVersion: "13115778"
+  uid: 078a23ea-cb50-4ade-a85c-6ba5dff35731
 ```
 
 #### 安装 Prow
