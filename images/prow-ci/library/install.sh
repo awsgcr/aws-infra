@@ -55,6 +55,10 @@ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/d
   && mv /tmp/eksctl /usr/local/bin \
   && eksctl version
 
+# install jsonnet
+curl --silent --location "https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-linux.tar.gz" | tar xz -C /tmp \
+  && mv /tmp/jsonnet* /usr/local/bin
+
 # install golang
 wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz
 tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
