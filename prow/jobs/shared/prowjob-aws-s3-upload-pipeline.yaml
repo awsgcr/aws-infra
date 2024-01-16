@@ -17,7 +17,7 @@ postsubmits:
       spec:
         serviceAccountName: prowjob-aws-s3-upload-pipeline-sa
         containers:
-          - image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240110
+          - image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240116
             command:
               - /bin/bash
             args:
