@@ -50,6 +50,11 @@ curl -k "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.
   && unzip awscliv2.zip &&./aws/install && rm -rf awscliv2.zip && rm -rf ./aws \
   && aws --version
 
+# install eksctl
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp \
+  && mv /tmp/eksctl /usr/local/bin \
+  && eksctl version
+
 # install golang
 wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz
 tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
