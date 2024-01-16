@@ -1,0 +1,29 @@
+branch_spec: &branch_spec
+  - ^master$
+
+postsubmits:
+  awsgcr/aws-infra:
+    - name: presubmit-aws-base-permisson-verify
+      branches: *branch_spec
+      decorate: true    
+      run_if_changed: '^app/gitops-prow-demo/main.go$'
+      labels:
+        preset-aws-shared-conf: "true"
+        git: "true"
+      rerun_auth_config:
+        github_users:
+          - TerrificMao
+      spec:
+        containers:
+          - image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240117
+            command:
+              - /bin/bash
+            args:
+              - -c
+              - |
+                source $(which error-trap)           
+                rm -rf .git
+                echo "✅ Verified AWS permission!" >> .content
+                echo "✅ You can deploy these changes!" >> .content
+                set +x
+                pr-comment --repo_owner ${REPO_OWNER} --repo_name ${REPO_NAME} --pull_base_sha ${PULL_BASE_SHA} -f .content
