@@ -2,22 +2,34 @@ branch_spec: &branch_spec
   - ^master$
 presubmits:
   awsgcr/aws-infra:
-    - name: presubmit-aws-permission-verify
+    - name: presubmit-public-docker-base
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
       always_run: false
       spec:
         containers:
-        - image: public.ecr.aws/aws-cli/aws-cli
+        - command:
+          - echo
+          - "Use public.ecr.aws/aws-cli/aws-cli base image"
+          env:
+          - name: AWS_REGION
+            value: ap-northeast-1
+          image: public.ecr.aws/aws-cli/aws-cli
           imagePullPolicy: Always
-          command:
-          - /bin/bash
-          args:
-            - -c
-            - |
-              source $(which error-trap)           
-              rm -rf .git
-              echo "✅ Verified AWS permission!" >> .content
-              echo "✅ You can deploy these changes!" >> .content
-              set +x
-              pr-comment --repo_owner ${REPO_OWNER} --repo_name ${REPO_NAME} --pull_base_sha ${PULL_BASE_SHA} -f .content
+
+presubmits:
+  awsgcr/aws-infra:
+    - name: presubmit-internal-docker-base
+      run_if_changed: '^app/gitops-prow-demo/main.go$'
+      agent: kubernetes
+      always_run: false
+      spec:
+        containers:
+        - command:
+          - echo
+          - "Use public.ecr.aws/aws-cli/aws-cli base image"
+          env:
+          - name: AWS_REGION
+            value: ap-northeast-1
+          image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240117
+          imagePullPolicy: Always
