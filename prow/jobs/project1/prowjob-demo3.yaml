@@ -15,7 +15,7 @@ postsubmits:
           - TerrificMao
       spec:
         containers:
-          - image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240117
+          - image: public.ecr.aws/aws-cli/aws-cli
             command:
               - /bin/bash
             args:
