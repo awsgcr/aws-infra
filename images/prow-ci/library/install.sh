@@ -66,10 +66,6 @@ export PATH=$PATH:/usr/local/go/bin
 go version
 rm -rf go${GO_VERSION}.linux-amd64.tar.gz
 
-# install jsonnet
-curl --silent --location "https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-linux.tar.gz" | tar xz -C /tmp \
-  && mv /tmp/jsonnet* /usr/local/bin
-
 # install makisu
 go install github.com/uber/makisu/bin/makisu@latest || mv $GOPATH/bin/makisu /bin/ || true
 
