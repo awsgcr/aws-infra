@@ -2,7 +2,7 @@ branch_spec: &branch_spec
   - ^master$
 presubmits:
   awsgcr/aws-infra:
-    - name: presubmit-internal-docker-base
+    - name: presubmit-public-docker-base
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
       always_run: false
@@ -10,9 +10,9 @@ presubmits:
         containers:
         - command:
           - echo
-          - "Use 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240117 base image"
+          - "Use public.ecr.aws/aws-cli/aws-cli base image"
           env:
           - name: AWS_REGION
             value: ap-northeast-1
-          image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240117
+          image: public.ecr.aws/aws-cli/aws-cli
           imagePullPolicy: Always
