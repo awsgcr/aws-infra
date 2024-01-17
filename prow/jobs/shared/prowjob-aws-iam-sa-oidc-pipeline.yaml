@@ -9,7 +9,7 @@ postsubmits:
       run_if_changed: '^eks/(project1|project2)/[^/]+/[^/]+/aws/[^/]+/[^/]+/iam-policy\.json$'
       clone_depth: 1
       labels:
-        preset-project1-prod-deploy-all: "true"
+        preset-project1-prod-deploy-all: "true" # 通过preset决定了具体要加载config文件夹里面的哪些配置，关系定义在config.yaml文件里面。
         git: "true"
       spec:
         containers:
