@@ -1,5 +1,5 @@
 branch_spec: &branch_spec
-  - ^master$
+  - ^main$
 presubmits:
   awsgcr/aws-infra:
     - name: presubmit-run-unit-test
