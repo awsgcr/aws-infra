@@ -34,7 +34,6 @@ config_updater:
     # 加载 /prow/config/label-config/labels.yaml 文件, PR会进行不同颜色配色
     prow/config/label-config/*:
       name: label-config
-      key: config
       clusters:
         default:
           - test-pods
@@ -48,7 +47,6 @@ config_updater:
     # 加载 /prow/config/kube-deploy.yaml 文件, 进行K8S资源部署
     prow/config/kube-deploy.yaml:
       name: kube-deploy-config
-      key: config
       clusters:
         default:
           - test-pods
