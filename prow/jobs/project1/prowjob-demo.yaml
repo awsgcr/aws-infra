@@ -3,6 +3,8 @@ branch_spec: &branch_spec
 presubmits:
   awsgcr/aws-infra:
     - name: presubmit-run-unit-test
+      branches: *branch_spec
+      decorate: true
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
       always_run: false
