@@ -1,0 +1,35 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJZk5oMVg4eXhWaTR3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TXpFeU1qTXhOVEkwTVRaYUZ3MHpNekV5TWpBeE5USTVNVFphTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUMwMGpVVFFoTFd3TmJucGl6VUxPTEg1MkFnQk5TNGtpVm8rZUdtWVdXdkFwQ2REMzBiN2Jta3FhZk8KV1ZsMHRBaHlWbTFScnNOODdUVGxRRzB0ZFVaSjltU29HWDNxdTNZNnk0dWlxczQvRWxPaktrTUYvMEw1UjFKVApGdENnUHNPVkRCeSt6RjlzWjdpWW0wYmVJNHVUMjNtWlg0RUVEQisyczBaUmtGd3I5NjYxdU5wTWMwaHlFRlk2Ci81M1pXcjlIZHR5M09FOFc1cEJiK0t5aVpSMkh1MU13U1ZiWDl0ZHREc1l5d3M1OXB4YlpKRUxVMmQrSFJ2WjMKSFJnVEhybDRoUnIzY2cweTcrZVFrUEVNdWV1djdJaVQrNWVOYlhKK1VkUU9NZC9kTjVMNEJyR2V5RHB0SFNrOAoybjk2MEJNNEdwY1MxMTZ0cE5sZjhDN2RhS3ZIQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRWVZON1MvYy9hQlMrblZpNjdKUENoakprR0N6QVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQlMwM1dtRXk3dApoekpJaGJZK0dKRS9EMTFLTlZRVWNMSm1EeHFOMHoxNWxDWTJqSTZIMUpncHpTZ2N4dzUvSFk4WlVJd1hSYlZmCk5DTEcwMlFDNTFza0ErNjZzM2pldmdQYThWaWlBdWowcDFRUmsvcDFoOUxYeDZvem1tY0xhallQb2ZqdDJJdkwKSGtleHJzSCtHbDErSjRRZXY5NlhleHZJM05PTHRkcTRuOG1QWXpRQkphRmhWREl5VTM1NS9lWHZiQnFDaHY5egpLaHRGejgraE4vZUpUZHVucE9VVHE4QjdoSFlqL2xkS2JPMGRFTmFxRHlMWFpaSEo3c2cvZmMzb1NCSWdsVHRNCk9WVmdEa0NWZ0VzN3lGbDNFK3NkSklNZXI4aGNmVDQvS2VMTk9jdDZLamxCNHZGZ1NkRXhibitFT3JwVDJUVFoKRG41MGxyQ0hINGNYCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    server: https://3B25B8991969DEE1082497E0792338E9.gr7.ap-northeast-1.eks.amazonaws.com
+  name: gitops-prow
+contexts:
+- context:
+    cluster: gitops-prow
+    user: gitops-prow
+  name: gitops-prow
+current-context:
+kind: Config
+preferences: {}
+users:
+- name: gitops-prow
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - eks
+      - get-token
+      - --output
+      - json
+      - --cluster-name
+      - gitops-prow
+      - --region
+      - ap-northeast-1
+      command: aws
+      env:
+      - name: AWS_PROFILE
+        value: gitops-prow
+      - name: AWS_STS_REGIONAL_ENDPOINTS
+        value: regional
+      provideClusterInfo: false
