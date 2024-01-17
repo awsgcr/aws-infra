@@ -95,7 +95,7 @@ postsubmits:
       run_if_changed: '^eks/(project1|project2)/[^/]+/[^/]+/aws/[^/]+/[^/]+/iam-policy\.json$'
       clone_depth: 1
       labels:
-        preset-aws-conf: "true"
+        preset-project1-prod-deploy-all: "true"
         git: "true"
       spec:
         containers:
@@ -125,7 +125,7 @@ postsubmits:
       run_if_changed: '^eks/(project1|project2)/[^/]+/[^/]+/aws/[^/]+/[^/]+/iam-policy\.json$'
       clone_depth: 1
       labels:
-        preset-aws-conf: "true"
+        preset-project1-prod-deploy-all: "true"
         git: "true"
       spec:
         containers:
