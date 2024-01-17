@@ -4,3 +4,6 @@ approvers:
 
 reviewers:
 - aws-infra
+
+self_lgtm_reviewers:
+- TerrificMao
