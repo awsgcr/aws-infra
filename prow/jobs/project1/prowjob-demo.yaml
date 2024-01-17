@@ -14,5 +14,5 @@ presubmits:
             args:
               - -c
               - |
-                cd /app/gitops-prow-demo
+                cd app/gitops-prow-demo
                 go test
