@@ -9,4 +9,10 @@ presubmits:
       spec:
         containers:
           - image: golang:latest
-            command: [ "go","test","." ]
+            command:
+              - /bin/bash
+            args:
+              - -c
+              - |
+                cd /app/gitops-prow-demo
+                go test
