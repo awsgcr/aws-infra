@@ -41,7 +41,6 @@ config_updater:
     # 加载 /prow/config/aws-config/aws-deploy-config 文件, 进行AWS资源部署
     prow/config/aws-config/*:
       name: aws-deploy-config
-      key: config
       clusters:
         default:
           - test-pods
