@@ -8,9 +8,7 @@
             "Effect": "Allow",
             "Resource": [
                 "arn:aws:s3:::damonmao-public-share",
-                "arn:aws:s3:::damonmao-public-share/*",
-                "arn:aws:s3:::damonmao-mao",
-                "arn:aws:s3:::damonmao-mao/*"
+                "arn:aws:s3:::damonmao-public-share/*"
             ]
         },
         {
