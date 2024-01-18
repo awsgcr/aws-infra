@@ -1,8 +1,10 @@
 branch_spec: &branch_spec
-  - ^master$
+  - ^main$
 presubmits:
   awsgcr/aws-infra:
-    - name: presubmit-internal-docker-base
+    - name: presubmit-source-code-scan
+      branches: *branch_spec
+      decorate: true
       run_if_changed: '^app/gitops-prow-demo/main.go$'
       agent: kubernetes
       always_run: false

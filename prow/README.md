@@ -89,6 +89,8 @@ $ echo "ghp_8qY123456789123456789123456789123456789" > /root/prow/secret/oauth-t
 
 $ kubectl -n prow create secret generic oauth-token --from-file=oauth=/root/prow_secret/oauth-token
 secret/oauth-token created
+$ kubectl -n test-pods create secret generic oauth-token --from-file=oauth=/root/prow_secret/oauth-token
+secret/oauth-token created
 ```
 
 #### 配置AWS S3 Secret，使得Prow的日志可以存储到S3

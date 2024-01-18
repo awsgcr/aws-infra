@@ -34,35 +34,35 @@ plank: # replace 3 domain names
       oauth_token_secret:
         name: oauth-token
         key: oauth
-      # resources:
-      #   clonerefs:
-      #     requests:
-      #       cpu: 500m
-      #       memory: 1Gi
-      #     limits:
-      #       cpu: "1"
-      #       memory: 1.5Gi
-      #   initupload:
-      #     requests:
-      #       cpu: 500m
-      #       memory: 1Gi
-      #     limits:
-      #       cpu: "1"
-      #       memory: 1.5Gi
-      #   place_entrypoint:
-      #     requests:
-      #       cpu: 500m
-      #       memory: 1Gi
-      #     limits:
-      #       cpu: "1"
-      #       memory: 1.5Gi
-      #   sidecar:
-      #     requests:
-      #       cpu: 500m
-      #       memory: 1Gi
-      #     limits:
-      #       cpu: "1"
-      #       memory: 1.5Gi
+      resources:
+        clonerefs:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+        initupload:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+        place_entrypoint:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+        sidecar:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
 
 sinker:
   resync_period: 1m
