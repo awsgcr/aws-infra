@@ -1,0 +1,123 @@
+#!/bin/bash
+source $(which error-trap)
+export LANG=C.UTF-8
+
+usage()
+{
+    echo "
+    Get all filename changes in the PR, filter them with --regex. And execute script on each of them by defining script.
+    usage:
+        ./for-pr-files --script do-something.sh --regex '^eks/project1/[^/]+/[^/]+/k8s/[^/]+/.*\.(yaml|yml)$'
+    "
+}
+
+regex=""
+script=
+include_deleted=false
+include_added=true
+include_modified=true
+set +u
+while [ "$1" != "" ]; do
+  case $1 in
+    --script ) shift
+      script=$1
+      ;;
+    --regex ) shift
+      regex=$1
+      ;;
+    --include_deleted ) shift
+      include_deleted=$1
+      ;;
+    --include_added ) shift
+      include_added=$1
+      ;;
+    --include_modified ) shift
+      include_modified=$1
+      ;;
+    -h | --help )
+      usage
+      exit
+      ;;
+    * )
+      usage
+      exit 1
+  esac
+  shift
+done
+set -u
+
+if [ "$script" = "" ]; then
+    usage
+    exit 1
+fi
+
+input=$(mktemp)
+output=$(mktemp)
+
+case ${JOB_TYPE} in
+"postsubmit")
+pr-files --postsubmit ${PULL_BASE_SHA} \
+  --include_deleted $include_deleted \
+  --include_added $include_added \
+  --include_modified $include_modified > $output
+;;
+"presubmit")
+pr-files --presubmit ${PULL_NUMBER} \
+  --include_deleted $include_deleted \
+  --include_added $include_added \
+  --include_modified $include_modified > $output
+;;
+*)
+echo "Please specify --presubmit or --postsubmit"
+exit 1
+;;
+esac
+
+cp $output $input
+jq -r '.[].filename' < $input > $output
+cp $output $input
+
+for-files(){
+  source $(which error-trap)
+  i=0
+  while read line
+  do
+    if [ ! -z $regex ]; then
+      if [[ ! $line =~ $regex ]]; then
+        continue
+      fi
+    fi
+    i=$((i+1))
+    env_file=$(for-file-1 $line)
+    source $env_file
+    echo "" > $i.log
+    printf "\n\n------------ start: ${fullname} ------------\n\n" >> $i.log 2>&1
+    cat $env_file >> $i.log 2>&1
+    printf "\n" >> $i.log 2>&1
+    
+    printf "executing script..." >> $i.log
+    source $script >> $i.log 2>&1
+  done
+}
+
+for-files < $input
+wait
+
+for i in `seq $i`; do
+  printf "\n\n------------ end ------------\n" >> $i.log 2>&1
+  cat $i.log
+done
+
+extra_files=".extra-files"
+if [ -f $extra_files ]; then
+  regex=""
+  for-files < $extra_files
+else
+  echo "$extra_files not found"
+fi
+
+if [ -f .failed_summary ]; then
+  cat .failed_summary
+  pr-comment --repo_owner ${REPO_OWNER} --repo_name ${REPO_NAME} --pull_base_sha ${PULL_BASE_SHA} -f .failed_summary
+  exit 1
+fi
