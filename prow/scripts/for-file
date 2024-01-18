@@ -1,0 +1,26 @@
+#!/bin/bash
+source $(which error-trap)
+export LANG=C.UTF-8
+
+usage()
+{
+    echo "usage:
+        ./get-var-from-pr-path eks/project1/prod/gitops-prow/aws/kube-system/app-shared-default/iam-policy.json | source'
+        # to get env vars from git pr path
+    "
+}
+
+input=$(mktemp)
+output=$(mktemp)
+
+line=$1
+echo $line | parse-filename.py > $output
+cp $output $input
+jq -cM ".[0]" < $input > $output
+cp $output $input
+env_file=$(mktemp)
+cat $input | jq -cMr 'keys[]' | while read key; do
+  val=$(cat $input | jq -cMr ".$key")
+  echo "export $key=$val" >> $env_file
+done
+echo $env_file
