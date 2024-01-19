@@ -1,8 +1,3 @@
 [profile aws_prod_eks_gitops_prow_pod_role]
 role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_cicd_pod_identity_role
-web_identity_token_file = /var/run/secrets/eks.amazonaws.com/serviceaccount/token
-
-[profile prowjob-aws-s3-upload]
-role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_pod_s3_upload_role
-source_profile = prowjob-aws-s3-upload-sa
-role_session_name = prowjob-aws-s3-upload
+web_identity_token_file = /var/run/secrets/eks.amazonaws.com/serviceaccount/tok

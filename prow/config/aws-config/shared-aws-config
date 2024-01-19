@@ -2,7 +2,8 @@
 role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_cicd_pod_identity_role
 web_identity_token_file = /var/run/secrets/eks.amazonaws.com/serviceaccount/tok
 
-[profile prowjob-aws-iam-sa-via-iam-policy-json]
-role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_cicd_pod_identity_role
-source_profile = prowjob-aws-iam-sa-via-iam-policy-json-sa
-role_session_name = prowjob-aws-iam-sa-via-iam-policy-json
+[profile prowjob_aws_prod_eks_pod_s3_upload_role]
+region = ap-northeast-1
+role_arn = arn:aws:iam::821278736125:role/aws_prod_eks_pod_s3_upload_role
+source_profile = aws_prod_eks_gitops_prow_pod_role
+role_session_name = prowjob_aws_prod_eks_pod_s3_upload_role
