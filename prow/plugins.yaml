@@ -44,12 +44,18 @@ config_updater:
         default:
           - test-pods
           - kube-deploy
-    # 加载 /prow/config/kube-deploy.yaml 文件, 进行K8S资源部署
-    prow/config/kube-deploy.yaml:
-      name: kube-deploy-config
+    # 加载 /prow/config/kube-config/all 文件, 访问EKS集群的配置
+    prow/config/kube-config/*:
+      name: kube-cluster-config
       clusters:
         default:
           - test-pods
+          - kube-deploy
+    # 加载 /prow/config/kube-deploy.yaml 文件, 部署K8S资源
+    prow/config/k8s-deploy.yaml:
+      name: k8s-deploy-config
+      clusters:
+        default:
           - kube-deploy
     # 加载 /prow/jobs/ 里面所有文件，配置自定义脚本
     prow/jobs/**/*.yaml:

@@ -138,7 +138,7 @@ presets:
     volumes:
       - name: kube-config
         configMap:
-          name: kube-deploy-config
+          name: kube-cluster-config
       - name: aws-config
         configMap:
           name: aws-deploy-config
@@ -152,7 +152,7 @@ presets:
         readOnly: true
       - name: aws-config
         mountPath: /root/.aws/config
-        subPath: project1-config
+        subPath: project1-aws-config
         readOnly: true
 
 presubmits:
