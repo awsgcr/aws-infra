@@ -33,3 +33,4 @@ users:
       - name: AWS_STS_REGIONAL_ENDPOINTS
         value: regional
       provideClusterInfo: false
+# trigger
