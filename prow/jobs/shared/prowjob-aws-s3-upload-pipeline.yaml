@@ -1,7 +1,6 @@
 branch_spec: &branch_spec
-  - ^master$
+  - ^main$
 
-# trigger git folder location: eks/project/env/eks_cluster_name/(iam-sa|aws)/namespace/application_name/iam-policy.json
 postsubmits:
   awsgcr/aws-infra:
     - name: postsubmit-aws-s3-upload
