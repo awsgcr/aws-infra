@@ -154,6 +154,38 @@ presets:
         mountPath: /root/.aws/config
         subPath: project1-aws-config
         readOnly: true
+  - labels:
+      git: "true"
+    env:
+      - name: GITHUB_USER
+        valueFrom:
+          secretKeyRef:
+            name: github-credentials
+            key: username
+      - name: GITHUB_PASSWORD
+        valuefrom:
+          secretKeyRef:
+            name: github-credentials
+            key: password
+      - name: GITHUB_USER_READONLY
+        valueFrom:
+          secretKeyRef:
+            name: github-credentials
+            key: readonly_username
+      - name: GITHUB_PASSWORD_READONLY
+        valueFrom:
+          secretKeyRef:
+            name: github-credentials
+            key: readonly_password
+    volumes:
+      - name: prow-ci-scripts
+        configMap:
+          name: prow-ci-scripts
+          defaultMode: 0777
+    volumeMounts:
+      - name: prow-ci-scripts
+        mountPath: /kaniko/ # we don't need kaniko. and /kaniko is in $PATH.
+        readOnly: true
 
 presubmits:
   awsgcr/gitops-prow-demo:
@@ -166,7 +198,7 @@ presubmits:
             command: [ "go","test","." ]
 
 periodics:
-  - interval: 2h
+  - interval: 4h
     agent: kubernetes
     name: prow-cronjob-schedule-trigger
     spec:
