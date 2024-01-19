@@ -5,7 +5,7 @@ export LANG=C.UTF-8
 usage()
 {
     echo "usage:
-        ./get-var-from-pr-path eks/project1/prod/gitops-prow/aws/kube-system/app-shared-default/iam-policy.json | source'
+        ./for-file eks/project1/prod/gitops-prow/aws/kube-system/app-shared-default/iam-policy.json | source'
         # to get env vars from git pr path
     "
 }
