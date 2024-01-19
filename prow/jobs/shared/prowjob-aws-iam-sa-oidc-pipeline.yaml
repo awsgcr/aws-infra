@@ -1,6 +1,5 @@
 branch_spec: &branch_spec
   - ^main$
-
 postsubmits:
   awsgcr/aws-infra:
     - name: postsubmit-aws-iam-sa-via-iam-policy-json-create
@@ -12,6 +11,7 @@ postsubmits:
         preset-project1-prod-deploy-all: "true"
         git: "true"
       spec:
+        serviceAccountName: prowjob-aws-eks-pipeline-base-sa
         containers:
           - image: 821278736125.dkr.ecr.ap-northeast-1.amazonaws.com/aws-infra/prow-ci:20240117
             command:
