@@ -10,7 +10,8 @@
                 "arn:aws:s3:::damonmao-public-share",
                 "arn:aws:s3:::damonmao-public-share/*",
                 "arn:aws:s3:::damonmao",
-                "arn:aws:s3:::damonmao/*"
+                "arn:aws:s3:::damonmao/*",
+                "arn:aws:s3:::damonmao-deleteme/*"
             ]
         },
         {
