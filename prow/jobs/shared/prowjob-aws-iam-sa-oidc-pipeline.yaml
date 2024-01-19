@@ -1,6 +1,6 @@
 branch_spec: &branch_spec
   - ^main$
-presubmits:
+postsubmits:
   awsgcr/aws-infra:
     - name: postsubmit-aws-iam-sa-via-iam-policy-json-create
       branches: *branch_spec
